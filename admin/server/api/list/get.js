@@ -4,6 +4,11 @@ var listToArray = require('list-to-array');
 
 module.exports = function (req, res) {
 	var where = {};
+
+	if(req.list.options.filter) {
+		where = req.list.options.filter(req);
+	}
+
 	var fields = req.query.fields;
 	var includeCount = req.query.count !== 'false';
 	var includeResults = req.query.results !== 'false';
