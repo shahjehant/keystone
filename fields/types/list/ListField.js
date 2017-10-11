@@ -15,7 +15,7 @@ function generateId () {
 	return i++;
 };
 
-const ItemDom = ({ name, id, onRemove, children }) => (
+const ItemDom = ({ name, id, onRemove, children, noedit }) => (
 	<div style={{
 		borderTop: '2px solid #eee',
 		paddingTop: 15,
@@ -23,9 +23,10 @@ const ItemDom = ({ name, id, onRemove, children }) => (
 		{name && <input type="hidden" name={name} value={id}/>}
 		{children}
 		<div style={{ textAlign: 'right', paddingBottom: 10 }}>
-			<Button size="xsmall" color="danger" onClick={onRemove}>
+		{!noedit &&
+		<Button size="xsmall" color="danger" onClick={onRemove}>
 				Remove
-			</Button>
+		</Button>}
 		</div>
 	</div>
 );
@@ -95,7 +96,7 @@ module.exports = Field.create({
 		}, this);
 	},
 	renderItems () {
-		const { value = [], path } = this.props;
+		const { value = [], path, noedit = false } = this.props;
 		const onAdd = this.addItem;
 		return (
 			<div>
@@ -105,14 +106,14 @@ module.exports = Field.create({
 					const onRemove = e => this.removeItem(index);
 
 					return (
-						<ItemDom key={id} {...{ id, name, onRemove }}>
+						<ItemDom key={id} {...{ id, name, onRemove, noedit }}>
 							{this.renderFieldsForItem(index, value)}
 						</ItemDom>
 					);
 				})}
-				<GlyphButton color="success" glyph="plus" position="left" onClick={onAdd}>
+				{!noedit && <GlyphButton color="success" glyph="plus" position="left" onClick={onAdd}>
 					Add
-				</GlyphButton>
+				</GlyphButton>}
 			</div>
 		);
 	},
@@ -121,11 +122,7 @@ module.exports = Field.create({
 		return (
 			<div className={css(classes.container)}>
 				<h3 data-things="whatever">{label}</h3>
-				{this.shouldRenderField() ? (
-					this.renderItems()
-				) : (
-					<Domify value={value} />
-				)}
+				{this.renderItems()}
 				{this.renderNote()}
 			</div>
 		);
