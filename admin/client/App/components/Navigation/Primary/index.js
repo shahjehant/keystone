@@ -37,7 +37,7 @@ var PrimaryNavigation = React.createClass({
 
 		return (
 			<PrimaryNavItem
-				label="octicon-sign-out"
+				label="glyphicon glyphicon-log"
 				href={this.props.signoutUrl}
 				title="Sign Out"
 			>
@@ -63,13 +63,14 @@ var PrimaryNavigation = React.createClass({
 	renderFrontLink () {
 		return (
 			<ul className="app-nav app-nav--primary app-nav--right">
-				{this.renderBackButton()}
+				{/*this.renderBackButton()*/}
 				{this.renderSignout()}
 			</ul>
 		);
 	},
 	renderBrand () {
 		// TODO: support navbarLogo from keystone config
+		if (!Keystone.backUrl) return null;
 
 		const { brand, currentSectionKey } = this.props;
 		const className = currentSectionKey === 'dashboard' ? 'primary-navbar__brand primary-navbar__item--active' : 'primary-navbar__brand';
@@ -78,7 +79,7 @@ var PrimaryNavigation = React.createClass({
 			<PrimaryNavItem
 				className={className}
 				label="octicon-home"
-				title={'Dashboard - ' + brand}
+				title={'Front page - ' + this.props.brand}
 				to={Keystone.adminPath}
 			>
 				<span className="octicon octicon-home" />
@@ -113,13 +114,11 @@ var PrimaryNavigation = React.createClass({
 
 		return (
 			<nav className="primary-navbar">
-				<Container clearFloatingChildren>
-					<ul className="app-nav app-nav--primary app-nav--left">
-						{this.renderBrand()}
-						{this.renderNavigation()}
-					</ul>
-					{this.renderFrontLink()}
-				</Container>
+				<ul className="app-nav app-nav--primary app-nav--left">
+					{this.renderBrand()}
+					{this.renderNavigation()}
+				</ul>
+				{this.renderFrontLink()}
 			</nav>
 		);
 	},

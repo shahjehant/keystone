@@ -76,6 +76,7 @@ const classes = {
 		paddingBottom: 30,
 		paddingTop: 40,
 		textAlign: 'center',
+		display: 'none'
 	},
 	link: {
 		color: theme.color.gray60,
