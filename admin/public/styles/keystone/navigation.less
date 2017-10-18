@@ -64,7 +64,7 @@
   color: white;
   /* padding-bottom: .5em; */
   /* padding-top: .5em; */
-  width: 189px;
+  width: 175px;
   height: 100%;
   position: fixed;
   padding-top: 33px !important;
@@ -145,8 +145,9 @@
 
   li {
     width: auto;
+    position: relative;
     
-    li > a {
+    > a {
     color: inherit;
     padding: @secondary-navbar-padding-vertical @secondary-navbar-padding-horizontal;
     position: relative;
@@ -193,6 +194,11 @@
 	font-size: 16px;
 	//	padding-left: 0;
 	//	padding-right: 0; // 1
+  }
+
+  li > a {
+    margin-right: 0;
+    padding: 10px;
   }
 }
 
