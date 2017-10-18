@@ -19,7 +19,8 @@
   padding: 0;
 
   > li {
-	float: left;
+  float: left;
+  width: 100%;
 
 	&.right {
 	  float: right;
@@ -108,7 +109,6 @@
 // hide the active item's divider and, using box-shadow, mask the one
 // to its right
 .primary-navbar__item--active {
-  box-shadow: 2px 0 0 @primary-navbar-bg;
   z-index: 2;
 
   &::before {
@@ -118,7 +118,6 @@
   .primary-navbar__link {
 	background-color: @primary-navbar-active-bg;
 	color: @primary-navbar-active-color;
-	width: 187px;
   }
 }
 
@@ -142,15 +141,20 @@
   border-bottom: 1px solid darken(@secondary-navbar-bg, 10%);
   color: ghostwhite;
   font-size: 16px;
+  margin-left: 175px;
 
-  li > a {
-	color: inherit;
-	padding: @secondary-navbar-padding-vertical @secondary-navbar-padding-horizontal;
-	position: relative;
+  li {
+    width: auto;
+    
+    li > a {
+    color: inherit;
+    padding: @secondary-navbar-padding-vertical @secondary-navbar-padding-horizontal;
+    position: relative;
 
-	&:hover {
-	  color: @secondary-navbar-hover-color;
-	}
+    &:hover {
+      color: @secondary-navbar-hover-color;
+    }
+    }
   }
   .active > a {
 	color: ghostwhite;

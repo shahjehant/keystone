@@ -1,7 +1,7 @@
 import moment from 'moment';
 
-const DATE_FORMAT = 'MMM D YYYY';
-const DATETIME_FORMAT = 'MMM D YYYY h:mm:ss';
+const DATE_FORMAT = 'YYYY-MM-DD';
+const DATETIME_FORMAT = 'YYYY-MM-DD h:mm:ss a';
 
 function getFilterLabel (field, value) {
 	const label = field.label;

@@ -74,17 +74,16 @@ var PrimaryNavigation = React.createClass({
 
 		const { brand, currentSectionKey } = this.props;
 		const className = currentSectionKey === 'dashboard' ? 'primary-navbar__brand primary-navbar__item--active' : 'primary-navbar__brand';
-
 		return (
-			<PrimaryNavItem
+		 	<PrimaryNavItem
 				className={className}
+				href={Keystone.backUrl}
 				label="octicon-home"
 				title={'Front page - ' + this.props.brand}
-				to={Keystone.adminPath}
-			>
-				<span className="octicon octicon-home" />
-			</PrimaryNavItem>
-		);
+		 	>
+		 		<span className="octicon octicon-home" />
+		 	</PrimaryNavItem>
+	 	);
 	},
 	// Render the navigation
 	renderNavigation () {
