@@ -1,4 +1,5 @@
 var utils = require('keystone-utils');
+var crypto = require('crypto');
 var session = require('../../../../lib/session');
 
 function signin (req, res) {
@@ -18,9 +19,13 @@ function signin (req, res) {
 				user._.password.compare(req.body.password, function (err, isMatch) {
 					if (isMatch) {
 						session.signinWithUser(user, req, res, function () {
-							keystone.callHook(user, 'post:signin', req, function (err) {
-								if (err) return res.status(500).json({ error: 'post:signin error', detail: err });
-								res.json({ success: true, user: user });
+							const buf = crypto.randomBytes(64);
+							user.token = buf.toString('hex');
+							user.save(function(err, user) {
+								keystone.callHook(user, 'post:signin', req, function (err) {
+									if (err) return res.status(500).json({ error: 'post:signin error', detail: err });
+									res.json({ success: true, user: user });
+								});
 							});
 						});
 					} else if (err) {

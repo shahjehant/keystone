@@ -37,6 +37,7 @@ module.exports = function IndexRoute (req, res) {
 		signoutUrl: keystone.get('signout url'),
 		user: {
 			id: req.user.id,
+			token: req.user.token,
 			name: UserList.getDocumentName(req.user) || '(no name)',
 		},
 		userList: UserList.key,
@@ -53,6 +54,7 @@ module.exports = function IndexRoute (req, res) {
 			menubar: keystone.get('wysiwyg menubar'),
 			importcss: keystone.get('wysiwyg importcss') || '',
 		} },
+		externalHost: keystone.get('external host')
 	};
 	keystoneData.csrf.header[keystone.security.csrf.CSRF_HEADER_KEY] = keystone.security.csrf.getToken(req, res);
 

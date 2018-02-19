@@ -33,6 +33,11 @@ User.add({
 		defaults: true,
 		index: true,
 	},
+	token: {
+		type: Types.Text,
+		hidden: true,
+		index: true
+	}
 });
 
 User.schema.virtual('canAccessKeystone').get(function () {

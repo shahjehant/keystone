@@ -38,17 +38,53 @@ const CreateForm = React.createClass({
 		return {
 			values: values,
 			alerts: {},
+			showIframe: false
 		};
 	},
 	componentDidMount () {
-		document.body.addEventListener('keyup', this.handleKeyPress, false);
+		if(this.props.list.link.create) {
+			this.setState({
+				showIframe: true
+			})
+			window.addEventListener("message", this.handleFrameTasks, this);
+		} else {
+			document.body.addEventListener('keyup', this.handleKeyPress, false);
+		}
 	},
 	componentWillUnmount () {
-		document.body.removeEventListener('keyup', this.handleKeyPress, false);
+		if(this.state.showIframe) {
+			window.removeEventListener("message", this.handleFrameTasks, this);
+		} else {
+			document.body.removeEventListener('keyup', this.handleKeyPress, false);
+		}
 	},
 	handleKeyPress (evt) {
 		if (vkey[evt.keyCode] === '<escape>') {
 			this.props.onCancel();
+		}
+	},
+	handleFrameTasks(e){
+		try{
+			const message = JSON.parse(e.data);
+			switch(message.type) {
+				case 'contentUpdate': 
+					this.setState({
+						contentHeight: message.data
+					})
+					break;
+				case 'onSave':
+					if (this.props.onCreate) {
+						this.props.onCreate(message.data);
+					}
+					break;
+				case 'onCancel':
+					if(this.props.onCancel) {
+						this.props.onCancel();
+					}
+					break;
+			}
+		} catch (err) {
+			console.error(err);
 		}
 	},
 	// Handle input change events
@@ -176,16 +212,21 @@ const CreateForm = React.createClass({
 			</Form>
 		);
 	},
-	render () {
-		return (
-			<Modal.Dialog
-				isOpen={this.props.isOpen}
-				onClose={this.props.onCancel}
-				backdropClosesModal
+	renderContent() {
+		const {showIframe} = this.state;
+		const iframeURL = `${Keystone.externalHost}${this.props.list.link.create}?token=${Keystone.user.token}`
+		return (showIframe && this.props.isOpen) ?
+			(<iframe className="content-frame" style={{height: this.state.contentHeight}} ref={(f) => this.ifr = f } src={iframeURL} />) :
+			(<Modal.Dialog
+			isOpen={this.props.isOpen}
+			onClose={this.props.onCancel}
+			backdropClosesModal
 			>
 				{this.renderForm()}
-			</Modal.Dialog>
-		);
+			</Modal.Dialog>)
+	},
+	render () {
+		return this.renderContent();
 	},
 });
 

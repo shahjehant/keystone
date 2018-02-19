@@ -38,6 +38,7 @@ var Keystone = function () {
 		'module root': moduleRoot,
 		'frame guard': 'sameorigin',
 		'cache admin bundles': true,
+		'external host': null
 	};
 	this._redirects = {};
 

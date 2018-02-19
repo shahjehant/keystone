@@ -44,8 +44,9 @@ function checkKeystoneReady (done) {
 		interval: 3000
 	}, function(done, result) {
 		console.log([moment().format('HH:mm:ss:SSS')] + ' e2e: checking if KeystoneJS ready for request');
+		
 		request
-			.get('http://' + keystone.get('host') + ':' + keystone.get('port') + '/keystone')
+			.get('http://' + keystone.get('host') + ':' + keystone.get('port') + '/' + keystone.get('admin path'))
 			.end(done);
 	}, function (err, result) {
 		if (!err) {
