@@ -31,7 +31,6 @@ ReactDOM.render(
 			<Route path={Keystone.adminPath} component={App}>
 				<IndexRoute component={Home} />
 				<Route path=":listId" component={List} />
-				<Route path=":listId/create" component={Item} />
 				<Route path=":listId/:itemId" component={Item} />
 			</Route>
 		</Router>

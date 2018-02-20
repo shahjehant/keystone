@@ -73,6 +73,28 @@
 	bottom: 0;
 	width: 100%;
 	min-height: 100%;
+
+	&.full-screen {
+		position: absolute !important;
+    top: -2px;
+    bottom: 0;
+    height: 100%;
+    z-index: 1;
+	}
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	flex: 1;
+
+	.content-frame {
+		position: relative;
+		width: 100%;
+		min-height: auto;
+		flex: 1;
+	}
 }
 
 

@@ -7,11 +7,14 @@ import React from 'react';
 import { Container } from './elemental';
 import { Link } from 'react-router';
 import { css } from 'glamor';
+import _ from 'lodash';
 
 import MobileNavigation from './components/Navigation/Mobile';
 import PrimaryNavigation from './components/Navigation/Primary';
 import SecondaryNavigation from './components/Navigation/Secondary';
 import Footer from './components/Footer';
+
+import IframeContent from './shared/IframeContent';
 
 const classes = {
 	wrapper: {
@@ -34,14 +37,25 @@ const App = (props) => {
 		// If we're on a list path that doesn't exist (e.g. /keystone/gibberishasfw34afsd) this will
 		// be undefined
 		if (!currentList) {
-			children = (
-				<Container>
-					<p>List not found!</p>
-					<Link to={`${Keystone.adminPath}`}>
-						Go back home
-					</Link>
-				</Container>
-			);
+			const section = _.find(Keystone.nav.sections, {lists: [{path: props.location.pathname, external: true}] })
+			if (section) {
+				const path = _.find(section.lists, {path: props.location.pathname, external: true});
+				console.log(path);
+				children = (<IframeContent src={path.href} show={true} onCancel={() => {
+					console.log('frame cancel');
+				}} onSave={() => {
+					console.log('frame save');
+				}} />)
+			} else {
+				children = (
+					<Container>
+						<p>List not found!</p>
+						<Link to={`${Keystone.adminPath}`}>
+							Go back home
+						</Link>
+					</Container>
+				);
+			}
 		} else {
 			// Get the current section we're in for the navigation
 			currentSection = Keystone.nav.by.list[currentList.key];

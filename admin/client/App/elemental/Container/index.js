@@ -13,9 +13,12 @@ function Container ({
 	props.className = css(
 		classes.container,
 		classes[width],
-		clearFloatingChildren ? classes.clearfix : null,
-		className
+		clearFloatingChildren ? classes.clearfix : null
 	);
+
+	props.className = props.className + ' ' + className;
+
+	console.log("className", props);
 
 	return <Component {...props} />;
 };

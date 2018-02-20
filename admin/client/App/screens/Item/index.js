@@ -18,6 +18,8 @@ import EditFormHeader from './components/EditFormHeader';
 import RelatedItemsList from './components/RelatedItemsList/RelatedItemsList';
 // import FlashMessages from '../../shared/FlashMessages';
 
+import IframeContent from '../../shared/IframeContent';
+
 import {
 	selectItem,
 	loadItemData,
@@ -35,6 +37,7 @@ var ItemView = React.createClass({
 	getInitialState () {
 		return {
 			createIsOpen: false,
+			showIframe: false
 		};
 	},
 	componentDidMount () {
@@ -45,6 +48,7 @@ var ItemView = React.createClass({
 			this.props.dispatch(selectList(this.props.params.listId));
 		}
 		this.initializeItem(this.props.params.itemId);
+
 	},
 	componentWillReceiveProps (nextProps) {
 		// We've opened a new item from the client side routing, so initialize
@@ -56,6 +60,16 @@ var ItemView = React.createClass({
 	},
 	// Initialize an item
 	initializeItem (itemId) {
+		const listItem = this.props.lists.data[this.props.params.listId];
+		if(listItem.link.edit) {
+			let editLink = listItem.link.edit;
+			editLink = editLink.replace(':id', itemId);
+			const iframeURL = `${Keystone.externalHost}${editLink}?token=${Keystone.user.token}`;
+			this.setState({
+				showIframe: true,
+				iframeURL: iframeURL
+			});
+		}
 		this.props.dispatch(selectItem(itemId));
 		this.props.dispatch(loadItemData());
 	},
@@ -152,12 +166,14 @@ var ItemView = React.createClass({
 			);
 		}
 
+		const {showIframe, iframeURL} = this.state;
+
 		// When we have the data, render the item view with it
 		return (
-			<div data-screen-id="item">
+			<div data-screen-id="item" className="flex-column">
 				{(this.props.error) ? this.handleError(this.props.error) : (
-					<div>
-						<Container>
+					<div className="flex-column">
+						<Container className={"flex-column"}>
 							<EditFormHeader
 								list={this.props.currentList}
 								data={this.props.data}
@@ -169,12 +185,14 @@ var ItemView = React.createClass({
 								onCancel={() => this.toggleCreateModal(false)}
 								onCreate={(item) => this.onCreate(item)}
 							/>
-							<EditForm
-								list={this.props.currentList}
-								data={this.props.data}
-								dispatch={this.props.dispatch}
-								router={this.context.router}
-							/>
+							{showIframe && iframeURL ? <IframeContent src={iframeURL} show={true}/> :
+								<EditForm
+									list={this.props.currentList}
+									data={this.props.data}
+									dispatch={this.props.dispatch}
+									router={this.context.router}
+								/>
+						}
 						</Container>
 						{this.renderRelationships()}
 					</div>
@@ -185,6 +203,7 @@ var ItemView = React.createClass({
 });
 
 module.exports = connect((state) => ({
+	lists: state.lists,
 	data: state.item.data,
 	loading: state.item.loading,
 	ready: state.item.ready,
