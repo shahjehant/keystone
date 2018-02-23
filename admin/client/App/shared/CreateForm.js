@@ -189,7 +189,7 @@ const CreateForm = React.createClass({
 	},
 	renderContent() {
 		const {showIframe} = this.state;
-		const iframeURL = `${Keystone.externalHost}${this.props.list.link.create}?token=${Keystone.user.token}`;
+		const iframeURL = `${Keystone.externalHost}${this.props.list.link.create}`;
 
 		return (showIframe && this.props.isOpen) ?
 			<IframeContent src={iframeURL} show={this.props.isOpen} onCancel={this.props.onCancel} onSave={this.props.onCreate} className={"full-screen"}/> :

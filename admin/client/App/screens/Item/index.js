@@ -64,7 +64,7 @@ var ItemView = React.createClass({
 		if(listItem.link.edit) {
 			let editLink = listItem.link.edit;
 			editLink = editLink.replace(':id', itemId);
-			const iframeURL = `${Keystone.externalHost}${editLink}?token=${Keystone.user.token}`;
+			const iframeURL = `${Keystone.externalHost}${editLink}`;
 			this.setState({
 				showIframe: true,
 				iframeURL: iframeURL

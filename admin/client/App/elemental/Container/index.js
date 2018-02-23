@@ -15,11 +15,7 @@ function Container ({
 		classes[width],
 		clearFloatingChildren ? classes.clearfix : null
 	);
-
 	props.className = props.className + ' ' + className;
-
-	console.log("className", props);
-
 	return <Component {...props} />;
 };
 
