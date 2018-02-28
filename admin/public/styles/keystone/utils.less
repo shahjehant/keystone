@@ -97,6 +97,37 @@
 	}
 }
 
+[data-screen-id=modal-dialog] {
+	max-height: 90vh;
+	overflow: hidden;
+
+	form {
+		display: flex;
+		flex-direction: column;
+		max-height: 90vh;
+		
+		> div:nth-child(1) {
+			height: 60px;
+		}
+
+		> div:nth-child(2) {
+			flex: 1;
+			overflow: auto;
+			max-height: 100%;
+			
+			@media (min-width: 992px) {
+				.keystone-relational-button {
+						margin-right: 33px;
+				}
+			}
+		}
+
+		> div:nth-child(3) {
+			height: 60px;
+		}
+	}
+}
+
 
 // Spacing
 // --------------------------------------------------

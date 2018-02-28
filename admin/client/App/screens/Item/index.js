@@ -81,6 +81,11 @@ var ItemView = React.createClass({
 		const list = this.props.currentList;
 		this.context.router.push(`${Keystone.adminPath}/${list.path}/${item.id}`);
 	},
+
+	cancelIframe () {
+		const list = this.props.currentList;
+		this.context.router.push(`${Keystone.adminPath}/${list.path}`);
+	},
 	// Open and close the create new item modal
 	toggleCreateModal (visible) {
 		this.setState({
@@ -185,7 +190,7 @@ var ItemView = React.createClass({
 								onCancel={() => this.toggleCreateModal(false)}
 								onCreate={(item) => this.onCreate(item)}
 							/>
-							{showIframe && iframeURL ? <IframeContent src={iframeURL} show={true}/> :
+							{showIframe && iframeURL ? <IframeContent src={iframeURL} show={true} onCancel={this.cancelIframe}/> :
 								<EditForm
 									list={this.props.currentList}
 									data={this.props.data}
