@@ -42,7 +42,26 @@ module.exports = Field.create({
 	},
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) return;
+		if (nextProps.value === this.props.value || nextProps.many && compareValues(this.props.value, nextProps.value)) {
+			if (this.props.filters) {
+				for (const key in this.props.filters) {
+					if (this.props.filters.hasOwnProperty(key)) {
+						if (this.props.values[key] !== nextProps.values[key]) {
+							this.setState({
+								createIsOpen: true
+							}, () => {
+								setTimeout(() => {
+									this.setState({ createIsOpen: false, value: null });
+								}, 10);
+							});
+
+							return;
+						}
+					}
+				}
+			}
+			return;
+		}
 		this.loadValue(nextProps.value);
 	},
 
@@ -194,17 +213,18 @@ module.exports = Field.create({
 			<div>
 				{/* This input element fools Safari's autocorrect in certain situations that completely break react-select */}
 				<input type="text" style={{ position: 'absolute', width: 1, height: 1, zIndex: -1, opacity: 0 }} tabIndex="-1"/>
-				<Select.Async
+				{!this.state.createIsOpen && <Select.Async
 					multi={this.props.many}
 					disabled={noedit}
 					loadOptions={this.loadOptions}
 					labelKey="name"
 					name={this.getInputName(this.props.path)}
 					onChange={this.valueChanged}
+					cache={false}
 					simpleValue
 					value={this.state.value}
 					valueKey="id"
-				/>
+				/>}
 			</div>
 		);
 	},
