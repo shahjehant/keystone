@@ -154,13 +154,19 @@ const ListView = React.createClass({
 		const itemCount = pluralize(checkedItems, ('* ' + list.singular.toLowerCase()), ('* ' + list.plural.toLowerCase()));
 		const itemIds = Object.keys(checkedItems);
 
+		let message = `Are you sure you want to delete ${itemCount}?`;
+
+		if (list.deletePrompt) {
+			message = list.deletePrompt;
+		}
+	
 		this.setState({
 			confirmationDialog: {
 				isOpen: true,
 				label: 'Delete',
 				body: (
 					<div>
-						Are you sure you want to delete {itemCount}?
+						{message}
 						<br />
 						<br />
 						This cannot be undone.
@@ -343,13 +349,21 @@ const ListView = React.createClass({
 
 		e.preventDefault();
 
+		const list = this.props.currentList;
+
+		let message = `Are you sure you want to delete <strong>${item.name}</strong>?`;
+
+		if (list.deletePrompt) {
+			message = list.deletePrompt;
+		}
+
 		this.setState({
 			confirmationDialog: {
 				isOpen: true,
 				label: 'Delete',
 				body: (
 					<div>
-						Are you sure you want to delete <strong>{item.name}</strong>?
+						{message}
 						<br />
 						<br />
 						This cannot be undone.

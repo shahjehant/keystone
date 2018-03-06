@@ -15,8 +15,12 @@ function newItem (value) {
 	return { key: 'i' + lastId, value: value };
 }
 
+function getValueAsArray(values) {
+	return values && _.isArray(values) ? values : [];
+}
+
 function reduceValues (values) {
-	return values.map(i => i.value);
+	return getValueAsArray(values).map(i => i.value);
 }
 
 module.exports = {
@@ -27,7 +31,7 @@ module.exports = {
 	},
 
 	componentWillReceiveProps: function (nextProps) {
-		if (nextProps.value.join('|') !== reduceValues(this.state.values).join('|')) {
+		if (getValueAsArray(nextProps.value).join('|') !== reduceValues(this.state.values).join('|')) {
 			this.setState({
 				values: nextProps.value.map(newItem),
 			});

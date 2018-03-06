@@ -369,6 +369,13 @@ var EditForm = React.createClass({
 		) : null;
 	},
 	render () {
+		const list = this.props.list;
+
+		let message = `Are you sure you want to delete <strong>{this.props.data.name}?</strong>`;
+
+		if (list.deletePrompt) {
+			message = list.deletePrompt;
+		}
 		return (
 			<form ref="editForm" className="EditForm-container">
 				{(this.state.alerts) ? <AlertMessages alerts={this.state.alerts} /> : null}
@@ -398,7 +405,7 @@ var EditForm = React.createClass({
 					onCancel={this.toggleDeleteDialog}
 					onConfirmation={this.handleDelete}
 				>
-					Are you sure you want to delete <strong>{this.props.data.name}?</strong>
+					{message}
 					<br />
 					<br />
 					This cannot be undone.
