@@ -24,6 +24,8 @@ module.exports = function IndexRoute (req, res) {
 		backUrl = '/';
 	}
 
+	const nav = keystone.initNav(keystone.get('nav'), req);
+
 	var keystoneData = {
 		adminPath: '/' + keystone.get('admin path'),
 		appversion: keystone.get('appversion'),
@@ -32,7 +34,7 @@ module.exports = function IndexRoute (req, res) {
 		csrf: { header: {} },
 		devMode: !!process.env.KEYSTONE_DEV,
 		lists: lists,
-		nav: keystone.nav,
+		nav: nav,
 		orphanedLists: orphanedLists,
 		signoutUrl: keystone.get('signout url'),
 		user: {
