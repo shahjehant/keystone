@@ -61,7 +61,7 @@ module.exports = function (req, res) {
 							if (results.length) {
 								// drilldown.data[path] = results;
 								drilldown.items.push({
-									list: refList.getOptions(),
+									list: refList.getOptions(req),
 									items: _.map(results, function (i) {
 										return {
 											label: refList.getDocumentName(i),
@@ -81,7 +81,7 @@ module.exports = function (req, res) {
 							if (result) {
 								// drilldown.data[path] = result;
 								drilldown.items.push({
-									list: refList.getOptions(),
+									list: refList.getOptions(req),
 									items: [{
 										label: refList.getDocumentName(result),
 										href: '/' + keystone.get('admin path') + '/' + refList.path + '/' + result.id,

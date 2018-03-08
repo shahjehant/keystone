@@ -8,7 +8,7 @@ module.exports = function IndexRoute (req, res) {
 	var keystone = req.keystone;
 	var lists = {};
 	_.forEach(keystone.lists, function (list, key) {
-		lists[key] = list.getOptions();
+		lists[key] = list.getOptions(req);
 	});
 
 	var UserList = keystone.list(keystone.get('user model'));

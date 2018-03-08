@@ -139,6 +139,9 @@ module.exports.create = function (spec) {
 			},
 		},
 		render () {
+			if (this.props.hidden) {
+				return null;
+			}
 			if (!evalDependsOn(this.props.dependsOn, this.props.values)) {
 				return null;
 			}

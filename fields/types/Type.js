@@ -102,8 +102,10 @@ function Field (list, path, options) {
 /**
  * Gets the options for the Field, as used by the React components
  */
-Field.prototype.getOptions = function () {
-	if (!this.__options) {
+Field.prototype.getOptions = function (req) {
+	const user_id = req && req.user && req.user._id;
+	if (!this.__options || this.__user__id !== user_id) {
+		this.__user__id = user_id;
 		this.__options = {};
 		var optionKeys = DEFAULT_OPTION_KEYS;
 		if (_.isArray(this._properties)) {
@@ -111,13 +113,13 @@ Field.prototype.getOptions = function () {
 		}
 		optionKeys.forEach(function (key) {
 			if (this[key]) {
-				this.__options[key] = this[key];
+				this.__options[key] = _.isFunction(this[key]) ? this[key](req) : this[key];
 			} else if (this.options[key]) {
-				this.__options[key] = this.options[key];
+				this.__options[key] = _.isFunction(this.options[key]) ? this.options[key](req) : this.options[key];
 			}
 		}, this);
 		if (this.getProperties) {
-			assign(this.__options, this.getProperties());
+			assign(this.__options, this.getProperties(req));
 		}
 		this.__options.hasFilterMethod = this.addFilterToQuery ? true : false;
 		this.__options.defaultValue = this.getDefaultValue();
