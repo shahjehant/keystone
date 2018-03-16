@@ -39,6 +39,7 @@ import {
 	setCurrentPage,
 	selectList,
 	clearCachedQuery,
+	customDownload,
 } from './actions';
 
 import {
@@ -159,7 +160,7 @@ const ListView = React.createClass({
 		if (list.deletePrompt) {
 			message = list.deletePrompt;
 		}
-	
+
 		this.setState({
 			confirmationDialog: {
 				isOpen: true,
@@ -179,6 +180,16 @@ const ListView = React.createClass({
 				},
 			},
 		});
+	},
+	customDownload () {
+		const { checkedItems } = this.state;
+		const itemIds = Object.keys(checkedItems);
+		if (itemIds.length > 1) {
+			alert('You can only download one Active Product Listing at a time, Please select only one Active Product Listing.');
+		} else {
+			this.props.dispatch(customDownload(itemIds));
+			this.toggleManageMode();
+		}
 	},
 	handleManagementSelect (selection) {
 		if (selection === 'all') this.checkAllItems();
@@ -215,6 +226,8 @@ const ListView = React.createClass({
 				nodelete={currentList.nodelete}
 				noedit={currentList.noedit}
 				selectAllItemsLoading={selectAllItemsLoading}
+				currentList={currentList}
+				handleCustomDownload={this.customDownload}
 			/>
 		);
 	},

@@ -18,6 +18,8 @@ function ListManagement ({
 	nodelete,
 	noedit,
 	selectAllItemsLoading,
+	currentList,
+	handleCustomDownload,
 	...props
 }) {
 	// do not render if there's no results
@@ -25,6 +27,20 @@ function ListManagement ({
 	if (!itemCount || (nodelete && noedit)) return null;
 
 	const buttonNoteStyles = { color: '#999', fontWeight: 'normal' };
+
+	const customDownloadButton = isOpen && currentList.customDownload && (
+		<Section>
+			<GlyphButton
+				color="info"
+				disabled={!checkedItemCount}
+				glyph="download"
+				onClick={handleCustomDownload}
+				position="left"
+				variant="link">
+				Download Active List
+			</GlyphButton>
+		</Section>
+	);
 
 	// delete button
 	const actionButtons = isOpen && (
@@ -93,6 +109,7 @@ function ListManagement ({
 				</Section>
 				{selectButtons}
 				{actionButtons}
+				{customDownloadButton}
 				{selectedCountText}
 			</Group>
 		</div>
@@ -101,6 +118,7 @@ function ListManagement ({
 
 ListManagement.propTypes = {
 	checkedItems: PropTypes.number,
+	handleCustomDownload: PropTypes.func.isRequired,
 	handleDelete: PropTypes.func.isRequired,
 	handleSelect: PropTypes.func.isRequired,
 	handleToggle: PropTypes.func.isRequired,

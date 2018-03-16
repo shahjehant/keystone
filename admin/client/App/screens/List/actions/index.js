@@ -60,6 +60,7 @@ import {
 	itemLoadingError,
 	deleteItems,
 	downloadItems,
+	customDownload,
 } from './items';
 
 import {
@@ -89,4 +90,5 @@ export {
 	setRowAlert,
 	moveItem,
 	downloadItems,
+	customDownload,
 };
