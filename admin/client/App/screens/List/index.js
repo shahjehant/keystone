@@ -84,6 +84,9 @@ const ListView = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		// We've opened a new list from the client side routing, so initialize
 		// again with the new list id
+		this.setState({
+			alerts: {},
+		});
 		const isReady = this.props.lists.ready && nextProps.lists.ready;
 		if (isReady && checkForQueryChange(nextProps, this.props)) {
 			this.props.dispatch(selectList(nextProps.params.listId));
