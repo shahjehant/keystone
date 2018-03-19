@@ -68,7 +68,6 @@ var AlertMessages = React.createClass({
 	},
 	render () {
 		let { error, success } = this.props.alerts;
-
 		if (error) {
 			// Render error alerts
 			switch (error.error) {

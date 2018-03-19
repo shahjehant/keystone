@@ -118,12 +118,11 @@ export function deleteItems (ids) {
 	};
 }
 
-export function customDownload (id) {
+export function customAction (id, action) {
 	return (dispatch, getState) => {
 		const state = getState();
 		const active = state.active;
-		const currentList = state.lists.currentList;
-		const url = '/app/' + currentList.customDownload + '?id=' + id;
+		const url = '/app/' + action + '?id=' + id;
 		window.open(url);
 	};
 }

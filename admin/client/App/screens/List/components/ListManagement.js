@@ -7,7 +7,7 @@ import {
 	Spinner,
 } from '../../../elemental';
 
-function ListManagement ({
+function ListManagement({
 	checkedItemCount,
 	handleDelete,
 	handleSelect,
@@ -19,7 +19,7 @@ function ListManagement ({
 	noedit,
 	selectAllItemsLoading,
 	currentList,
-	handleCustomDownload,
+	handleCustomAction,
 	...props
 }) {
 	// do not render if there's no results
@@ -28,19 +28,22 @@ function ListManagement ({
 
 	const buttonNoteStyles = { color: '#999', fontWeight: 'normal' };
 
-	const customDownloadButton = isOpen && currentList.customDownload && (
-		<Section>
-			<GlyphButton
-				color="info"
-				disabled={!checkedItemCount}
-				glyph="download"
-				onClick={handleCustomDownload}
-				position="left"
-				variant="link">
-				Download Active List
-			</GlyphButton>
-		</Section>
-	);
+	const customActionButtons = [];
+	if (isOpen && currentList && currentList.customAction) {
+		for (const customAction of currentList.customAction) {
+			customActionButtons.push(<Section>
+				<GlyphButton
+					color="info"
+					disabled={!checkedItemCount}
+					glyph="download"
+					onClick={() => handleCustomAction(customAction.action, customAction.type, customAction.multiple, customAction.data)}
+					position="left"
+					variant="link">
+					{customAction.label}
+				</GlyphButton>
+			</Section>);
+		}
+	}
 
 	// delete button
 	const actionButtons = isOpen && (
@@ -67,7 +70,7 @@ function ListManagement ({
 				active={allVisibleButtonIsActive}
 				onClick={() => handleSelect('all')}
 				title="Select all rows (including those not visible)">
-				{selectAllItemsLoading ? <Spinner/> : 'All'} <small style={buttonNoteStyles}>({itemCount})</small>
+				{selectAllItemsLoading ? <Spinner /> : 'All'} <small style={buttonNoteStyles}>({itemCount})</small>
 			</Button>
 		</Section>
 	);
@@ -109,7 +112,7 @@ function ListManagement ({
 				</Section>
 				{selectButtons}
 				{actionButtons}
-				{customDownloadButton}
+				{customActionButtons}
 				{selectedCountText}
 			</Group>
 		</div>
@@ -118,7 +121,7 @@ function ListManagement ({
 
 ListManagement.propTypes = {
 	checkedItems: PropTypes.number,
-	handleCustomDownload: PropTypes.func.isRequired,
+	handleCustomAction: PropTypes.func.isRequired,
 	handleDelete: PropTypes.func.isRequired,
 	handleSelect: PropTypes.func.isRequired,
 	handleToggle: PropTypes.func.isRequired,

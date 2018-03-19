@@ -24,6 +24,7 @@ import ListHeaderToolbar from './components/ListHeaderToolbar';
 import ListManagement from './components/ListManagement';
 
 import ConfirmationDialog from '../../shared/ConfirmationDialog';
+import AlertMessages from '../../shared/AlertMessages';
 import CreateForm from '../../shared/CreateForm';
 import FlashMessages from '../../shared/FlashMessages';
 import ItemsTable from './components/ItemsTable/ItemsTable';
@@ -39,7 +40,7 @@ import {
 	setCurrentPage,
 	selectList,
 	clearCachedQuery,
-	customDownload,
+	customAction,
 } from './actions';
 
 import {
@@ -52,7 +53,7 @@ const ListView = React.createClass({
 	contextTypes: {
 		router: React.PropTypes.object.isRequired,
 	},
-	getInitialState () {
+	getInitialState() {
 		return {
 			confirmationDialog: {
 				isOpen: false,
@@ -62,9 +63,10 @@ const ListView = React.createClass({
 			manageMode: false,
 			showCreateForm: false,
 			showUpdateForm: false,
+			alerts: {},
 		};
 	},
-	componentWillMount () {
+	componentWillMount() {
 		// When we directly navigate to a list without coming from another client
 		// side routed page before, we need to initialize the list and parse
 		// possibly specified query parameters
@@ -79,7 +81,7 @@ const ListView = React.createClass({
 		});
 
 	},
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps(nextProps) {
 		// We've opened a new list from the client side routing, so initialize
 		// again with the new list id
 		const isReady = this.props.lists.ready && nextProps.lists.ready;
@@ -87,7 +89,7 @@ const ListView = React.createClass({
 			this.props.dispatch(selectList(nextProps.params.listId));
 		}
 	},
-	componentWillUnmount () {
+	componentWillUnmount() {
 		this.props.dispatch(clearCachedQuery());
 	},
 
@@ -95,14 +97,14 @@ const ListView = React.createClass({
 	// HEADER
 	// ==============================
 	// Called when a new item is created
-	onCreate (item) {
+	onCreate(item) {
 		// Hide the create form
 		this.toggleCreateModal(false);
 		// Redirect to newly created item path
 		const list = this.props.currentList;
 		this.context.router.push(`${Keystone.adminPath}/${list.path}/${item.id}`);
 	},
-	createAutocreate () {
+	createAutocreate() {
 		const list = this.props.currentList;
 		list.createItem(null, (err, data) => {
 			if (err) {
@@ -114,42 +116,42 @@ const ListView = React.createClass({
 			}
 		});
 	},
-	updateSearch (e) {
+	updateSearch(e) {
 		this.props.dispatch(setActiveSearch(e.target.value));
 	},
-	handleSearchClear () {
+	handleSearchClear() {
 		this.props.dispatch(setActiveSearch(''));
 
 		// TODO re-implement focus when ready
 		// findDOMNode(this.refs.listSearchInput).focus();
 	},
-	handleSearchKey (e) {
+	handleSearchKey(e) {
 		// clear on esc
 		if (e.which === ESC_KEY_CODE) {
 			this.handleSearchClear();
 		}
 	},
-	handlePageSelect (i) {
+	handlePageSelect(i) {
 		// If the current page index is the same as the index we are intending to pass to redux, bail out.
 		if (i === this.props.lists.page.index) return;
 		return this.props.dispatch(setCurrentPage(i));
 	},
-	toggleManageMode (filter = !this.state.manageMode) {
+	toggleManageMode(filter = !this.state.manageMode) {
 		this.setState({
 			manageMode: filter,
 			checkedItems: {},
 		});
 	},
-	toggleUpdateModal (filter = !this.state.showUpdateForm) {
+	toggleUpdateModal(filter = !this.state.showUpdateForm) {
 		this.setState({
 			showUpdateForm: filter,
 		});
 	},
-	massUpdate () {
+	massUpdate() {
 		// TODO: Implement update multi-item
 		console.log('Update ALL the things!');
 	},
-	massDelete () {
+	massDelete() {
 		const { checkedItems } = this.state;
 		const list = this.props.currentList;
 		const itemCount = pluralize(checkedItems, ('* ' + list.singular.toLowerCase()), ('* ' + list.plural.toLowerCase()));
@@ -181,23 +183,58 @@ const ListView = React.createClass({
 			},
 		});
 	},
-	customDownload () {
+
+	customAction(action, type, multiple, data) {
 		const { checkedItems } = this.state;
 		const itemIds = Object.keys(checkedItems);
-		if (itemIds.length > 1) {
-			alert('You can only download one Active Product Listing at a time, Please select only one Active Product Listing.');
+
+		if (type === 'prompt') {
+			this.setState({
+				confirmationDialog: {
+					isOpen: true,
+					label: 'Save',
+					body: (
+						<div>
+							{data && data.map(value => <p key={value} > {value}</p>)}
+						</div>
+					),
+					onConfirmation: () => {
+						this.props.dispatch(customAction(itemIds, action));
+						this.toggleManageMode();
+						this.removeConfirmationDialog();
+					},
+				},
+			});
 		} else {
-			this.props.dispatch(customDownload(itemIds));
-			this.toggleManageMode();
+			if (!multiple) { // if Single Record Operation
+				if (itemIds.length > 1) {
+					this.setState({
+						alerts: {
+							error: {
+								error: 'You can only download one Active Product Listing at a time, Please select only one Active Product Listing.',
+							},
+						},
+					});
+				} else {
+					this.props.dispatch(customAction(itemIds, action));
+					this.toggleManageMode();
+					this.setState({
+						alerts: {},
+					});
+				}
+			} else {
+				this.props.dispatch(customAction(itemIds, action));
+				this.toggleManageMode();
+			}
 		}
 	},
-	handleManagementSelect (selection) {
+	handleManagementSelect(selection) {
 		if (selection === 'all') this.checkAllItems();
 		if (selection === 'none') this.uncheckAllTableItems();
 		if (selection === 'visible') this.checkAllTableItems();
 		return false;
 	},
-	renderConfirmationDialog () {
+	renderConfirmationDialog() {
 		const props = this.state.confirmationDialog;
 		return (
 			<ConfirmationDialog
@@ -210,7 +247,7 @@ const ListView = React.createClass({
 			</ConfirmationDialog>
 		);
 	},
-	renderManagement () {
+	renderManagement() {
 		const { checkedItems, manageMode, selectAllItemsLoading } = this.state;
 		const { currentList } = this.props;
 
@@ -227,11 +264,11 @@ const ListView = React.createClass({
 				noedit={currentList.noedit}
 				selectAllItemsLoading={selectAllItemsLoading}
 				currentList={currentList}
-				handleCustomDownload={this.customDownload}
+				handleCustomAction={this.customAction}
 			/>
 		);
 	},
-	renderPagination () {
+	renderPagination() {
 		const items = this.props.items;
 		if (this.state.manageMode || !items.count) return;
 
@@ -252,7 +289,7 @@ const ListView = React.createClass({
 			/>
 		);
 	},
-	renderHeader () {
+	renderHeader() {
 		const items = this.props.items;
 		const { autocreate, nocreate, plural, singular } = this.props.currentList;
 
@@ -311,7 +348,7 @@ const ListView = React.createClass({
 	// TABLE
 	// ==============================
 
-	checkTableItem (item, e) {
+	checkTableItem(item, e) {
 		e.preventDefault();
 		const newCheckedItems = { ...this.state.checkedItems };
 		const itemId = item.id;
@@ -324,7 +361,7 @@ const ListView = React.createClass({
 			checkedItems: newCheckedItems,
 		});
 	},
-	checkAllTableItems () {
+	checkAllTableItems() {
 		const checkedItems = {};
 		this.props.items.results.forEach(item => {
 			checkedItems[item.id] = true;
@@ -333,7 +370,7 @@ const ListView = React.createClass({
 			checkedItems: checkedItems,
 		});
 	},
-	checkAllItems () {
+	checkAllItems() {
 		const checkedItems = { ...this.state.checkedItems };
 		// Just in case this API call takes a long time, we'll update the select all button with
 		// a spinner.
@@ -349,12 +386,12 @@ const ListView = React.createClass({
 			});
 		});
 	},
-	uncheckAllTableItems () {
+	uncheckAllTableItems() {
 		this.setState({
 			checkedItems: {},
 		});
 	},
-	deleteTableItem (item, e) {
+	deleteTableItem(item, e) {
 		if (e.altKey) {
 			this.props.dispatch(deleteItem(item.id));
 			return;
@@ -389,14 +426,14 @@ const ListView = React.createClass({
 			},
 		});
 	},
-	removeConfirmationDialog () {
+	removeConfirmationDialog() {
 		this.setState({
 			confirmationDialog: {
 				isOpen: false,
 			},
 		});
 	},
-	toggleTableWidth () {
+	toggleTableWidth() {
 		this.setState({
 			constrainTableWidth: !this.state.constrainTableWidth,
 		});
@@ -406,28 +443,28 @@ const ListView = React.createClass({
 	// COMMON
 	// ==============================
 
-	handleSortSelect (path, inverted) {
+	handleSortSelect(path, inverted) {
 		if (inverted) path = '-' + path;
 		this.props.dispatch(setActiveSort(path));
 	},
-	toggleCreateModal (visible) {
+	toggleCreateModal(visible) {
 		this.setState({
 			showCreateForm: visible,
 		});
 	},
-	openCreateModal () {
+	openCreateModal() {
 		this.toggleCreateModal(true);
 	},
-	closeCreateModal () {
+	closeCreateModal() {
 		this.toggleCreateModal(false);
 	},
-	showBlankState () {
+	showBlankState() {
 		return !this.props.loading
-				&& !this.props.items.results.length
-				&& !this.props.active.search
-				&& !this.props.active.filters.length;
+			&& !this.props.items.results.length
+			&& !this.props.active.search
+			&& !this.props.active.filters.length;
 	},
-	renderBlankState () {
+	renderBlankState() {
 		const { currentList } = this.props;
 
 		if (!this.showBlankState()) return null;
@@ -448,9 +485,11 @@ const ListView = React.createClass({
 			<Container>
 				{(this.props.error) ? (
 					<FlashMessages
-						messages={{ error: [{
-							title: "There is a problem with the network, we're trying to reconnect...",
-						}] }}
+						messages={{
+							error: [{
+								title: "There is a problem with the network, we're trying to reconnect...",
+							}],
+						}}
 					/>
 				) : null}
 				<BlankState heading={`No ${this.props.currentList.plural.toLowerCase()} found...`} style={{ marginTop: 40 }}>
@@ -459,7 +498,7 @@ const ListView = React.createClass({
 			</Container>
 		);
 	},
-	renderActiveState () {
+	renderActiveState() {
 		if (this.showBlankState()) return null;
 
 		const containerStyle = {
@@ -484,9 +523,11 @@ const ListView = React.createClass({
 				<Container style={containerStyle}>
 					{(this.props.error) ? (
 						<FlashMessages
-							messages={{ error: [{
-								title: "There is a problem with the network, we're trying to reconnect..",
-							}] }}
+							messages={{
+								error: [{
+									title: "There is a problem with the network, we're trying to reconnect..",
+								}],
+							}}
 						/>
 					) : null}
 					{(this.props.loading) ? (
@@ -494,31 +535,31 @@ const ListView = React.createClass({
 							<Spinner />
 						</Center>
 					) : (
-						<div>
-							<ItemsTable
-								activeSort={this.props.active.sort}
-								checkedItems={this.state.checkedItems}
-								checkTableItem={this.checkTableItem}
-								columns={this.props.active.columns}
-								deleteTableItem={this.deleteTableItem}
-								handleSortSelect={this.handleSortSelect}
-								items={this.props.items}
-								list={this.props.currentList}
-								manageMode={this.state.manageMode}
-								rowAlert={this.props.rowAlert}
-								currentPage={this.props.lists.page.index}
-								pageSize={this.props.lists.page.size}
-								drag={this.props.lists.drag}
-								dispatch={this.props.dispatch}
-							/>
-							{this.renderNoSearchResults()}
-						</div>
-					)}
+							<div>
+								<ItemsTable
+									activeSort={this.props.active.sort}
+									checkedItems={this.state.checkedItems}
+									checkTableItem={this.checkTableItem}
+									columns={this.props.active.columns}
+									deleteTableItem={this.deleteTableItem}
+									handleSortSelect={this.handleSortSelect}
+									items={this.props.items}
+									list={this.props.currentList}
+									manageMode={this.state.manageMode}
+									rowAlert={this.props.rowAlert}
+									currentPage={this.props.lists.page.index}
+									pageSize={this.props.lists.page.size}
+									drag={this.props.lists.drag}
+									dispatch={this.props.dispatch}
+								/>
+								{this.renderNoSearchResults()}
+							</div>
+						)}
 				</Container>
 			</div>
 		);
 	},
-	renderNoSearchResults () {
+	renderNoSearchResults() {
 		if (this.props.items.results.length) return null;
 		let matching = this.props.active.search;
 		if (this.props.active.filters.length) {
@@ -538,7 +579,7 @@ const ListView = React.createClass({
 			</BlankState>
 		);
 	},
-	render () {
+	render() {
 		if (!this.props.ready) {
 			return (
 				<Center height="50vh" data-screen-id="list">
@@ -548,6 +589,8 @@ const ListView = React.createClass({
 		}
 		return (
 			<div data-screen-id="list">
+				{(this.state.alerts) ? <AlertMessages alerts={this.state.alerts} /> : null}
+
 				{this.renderBlankState()}
 				{this.renderActiveState()}
 				<CreateForm
