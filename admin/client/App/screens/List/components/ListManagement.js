@@ -36,7 +36,7 @@ function ListManagement({
 					color="info"
 					disabled={!checkedItemCount}
 					glyph="download"
-					onClick={() => handleCustomAction(customAction.action, customAction.type, customAction.multiple, customAction.data)}
+					onClick={() => handleCustomAction(customAction)}
 					position="left"
 					variant="link">
 					{customAction.label}

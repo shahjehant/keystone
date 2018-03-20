@@ -41,6 +41,7 @@ import {
 	selectList,
 	clearCachedQuery,
 	customAction,
+	customActionDownload,
 } from './actions';
 
 import {
@@ -186,47 +187,56 @@ const ListView = React.createClass({
 			},
 		});
 	},
-
-	customAction(action, type, multiple, data) {
-		const { checkedItems } = this.state;
-		const itemIds = Object.keys(checkedItems);
-
-		if (type === 'prompt') {
+	isMultipleAllowed(itemIds, multiple) {
+		if (!multiple && itemIds.length > 1) {
 			this.setState({
-				confirmationDialog: {
-					isOpen: true,
-					label: 'Save',
-					body: (
-						<div>
-							{data && data.map(value => <p key={value} > {value}</p>)}
-						</div>
-					),
-					onConfirmation: () => {
-						this.props.dispatch(customAction(itemIds, action));
-						this.toggleManageMode();
-						this.removeConfirmationDialog();
+				alerts: {
+					error: {
+						error: 'You can only download one Active Product Listing at a time, Please select only one Active Product Listing.',
 					},
 				},
 			});
-		} else {
-			if (!multiple) { // if Single Record Operation
-				if (itemIds.length > 1) {
-					this.setState({
-						alerts: {
-							error: {
-								error: 'You can only download one Active Product Listing at a time, Please select only one Active Product Listing.',
-							},
+			return false;
+		}
+		return true;
+	},
+	customAction(customActionData) {
+		const { action, type, multiple, data, status } = customActionData;
+		const { checkedItems } = this.state;
+		const itemIds = Object.keys(checkedItems);
+
+		if (type === 'download') {
+			if (this.isMultipleAllowed(itemIds, multiple)) {
+				this.props.dispatch(customActionDownload(itemIds, action));
+				this.toggleManageMode();
+				this.setState({
+					alerts: {},
+				});
+			}
+		} else if (type === 'prompt') {
+			if (this.isMultipleAllowed(itemIds, multiple)) {
+				this.setState({
+					confirmationDialog: {
+						isOpen: true,
+						label: 'Save',
+						body: (
+							<div>
+								<select>
+									{data && data.map(value => <p key={value.id} > {value.name}</p>)}
+								</select>
+							</div>
+						),
+						onConfirmation: () => {
+							this.props.dispatch(customAction(itemIds, action));
+							this.toggleManageMode();
+							this.removeConfirmationDialog();
 						},
-					});
-				} else {
-					this.props.dispatch(customAction(itemIds, action));
-					this.toggleManageMode();
-					this.setState({
-						alerts: {},
-					});
-				}
-			} else {
-				this.props.dispatch(customAction(itemIds, action));
+					},
+				});
+			}
+		} else { // simple event trigger
+			if (this.isMultipleAllowed(itemIds, multiple)) {
+				this.props.dispatch(customAction(itemIds, action, status));
 				this.toggleManageMode();
 			}
 		}
@@ -268,6 +278,7 @@ const ListView = React.createClass({
 				selectAllItemsLoading={selectAllItemsLoading}
 				currentList={currentList}
 				handleCustomAction={this.customAction}
+				handleCustomActionDownload={this.customActionDownload}
 			/>
 		);
 	},

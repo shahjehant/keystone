@@ -3,9 +3,10 @@ import {
 	ITEMS_LOADED,
 	ITEM_LOADING_ERROR,
 } from '../constants';
-
+const xhr = require('xhr');
+const assign = require('object-assign');
 import { NETWORK_ERROR_RETRY_DELAY } from '../../../../constants';
-export function loadItems (options = {}) {
+export function loadItems(options = {}) {
 	return (dispatch, getState) => {
 		let currentLoadCounter = getState().lists.loadCounter + 1;
 
@@ -68,7 +69,7 @@ export function loadItems (options = {}) {
 	};
 }
 
-export function downloadItems (format, columns) {
+export function downloadItems(format, columns) {
 	return (dispatch, getState) => {
 		const state = getState();
 		const active = state.active;
@@ -84,7 +85,7 @@ export function downloadItems (format, columns) {
 	};
 }
 
-export function itemsLoaded (items) {
+export function itemsLoaded(items) {
 	return {
 		type: ITEMS_LOADED,
 		items,
@@ -96,7 +97,7 @@ export function itemsLoaded (items) {
  * loadItems after NETWORK_ERROR_RETRY_DELAY milliseconds until we get items back
  */
 
-export function itemLoadingError () {
+export function itemLoadingError() {
 	return (dispatch) => {
 		dispatch({
 			type: ITEM_LOADING_ERROR,
@@ -108,7 +109,7 @@ export function itemLoadingError () {
 	};
 }
 
-export function deleteItems (ids) {
+export function deleteItems(ids) {
 	return (dispatch, getState) => {
 		const list = getState().lists.currentList;
 		list.deleteItems(ids, (err, data) => {
@@ -118,10 +119,33 @@ export function deleteItems (ids) {
 	};
 }
 
-export function customAction (id, action) {
+export function customAction(ids, action, status) {
 	return (dispatch, getState) => {
-		const state = getState();
-		const active = state.active;
+
+		let formData = new FormData();
+		formData.append('ids', ids);
+		formData.append('status', status);
+
+		xhr({
+			url: `/app/${action}`,
+			responseType: 'json',
+			method: 'PUT',
+			headers: assign({}, Keystone.csrf.header),
+			body: formData,
+		}, (err, resp, data) => {
+			if (err) return callback(err);
+
+			if (resp.statusCode === 200) {
+				dispatch(loadItems());
+			} else {
+				callback(data);
+			}
+		});
+	};
+}
+
+export function customActionDownload(id, action) {
+	return (dispatch, getState) => {
 		const url = '/app/' + action + '?id=' + id;
 		window.open(url);
 	};

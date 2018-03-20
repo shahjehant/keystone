@@ -61,6 +61,7 @@ import {
 	deleteItems,
 	downloadItems,
 	customAction,
+	customActionDownload,
 } from './items';
 
 import {
@@ -91,4 +92,5 @@ export {
 	moveItem,
 	downloadItems,
 	customAction,
+	customActionDownload,
 };
