@@ -32,6 +32,7 @@ import UpdateForm from './components/UpdateForm';
 import { plural as pluralize } from '../../../utils/string';
 import { listsByPath } from '../../../utils/lists';
 import { checkForQueryChange } from '../../../utils/queryParams';
+import IframeContent from '../../../App/shared/IframeContent';
 
 import {
 	deleteItems,
@@ -65,6 +66,10 @@ const ListView = React.createClass({
 			showCreateForm: false,
 			showUpdateForm: false,
 			alerts: {},
+			// Custom Action View
+			showIframe: false,
+			action_url: null,
+			id: null,
 		};
 	},
 	componentWillMount() {
@@ -83,6 +88,11 @@ const ListView = React.createClass({
 
 	},
 	componentWillReceiveProps(nextProps) {
+		// Review and make it more generic to clear custom action view on link change
+		if (this.props && this.props.lists.currentList && this.props.lists.currentList.id !== 'list_items') {
+			this.setState({ showIframe: false, action_url: null, id: null });
+		}
+
 		// We've opened a new list from the client side routing, so initialize
 		// again with the new list id
 		this.setState({
@@ -94,7 +104,9 @@ const ListView = React.createClass({
 		}
 	},
 	componentWillUnmount() {
+		this.setState({ showIframe: false, action_url: null, id: null }); // Custom Action View
 		this.props.dispatch(clearCachedQuery());
+
 	},
 
 	// ==============================
@@ -192,7 +204,7 @@ const ListView = React.createClass({
 			this.setState({
 				alerts: {
 					error: {
-						error: 'You can only download one Active Product Listing at a time, Please select only one Active Product Listing.',
+						error: 'Please select only one Record to complete this task.',
 					},
 				},
 			});
@@ -204,10 +216,23 @@ const ListView = React.createClass({
 		const { action, type, multiple, data, status } = customActionData;
 		const { checkedItems } = this.state;
 		const itemIds = Object.keys(checkedItems);
-
 		if (type === 'download') {
 			if (this.isMultipleAllowed(itemIds, multiple)) {
 				this.props.dispatch(customActionDownload(itemIds, action));
+				this.toggleManageMode();
+				this.setState({
+					alerts: {},
+				});
+			}
+		} else if (type === 'view') { // Custom Action View
+
+			if (this.isMultipleAllowed(itemIds, multiple)) {
+				const iframeURL = `${Keystone.externalHost}/${action}/${itemIds}`;
+				this.setState({
+					showIframe: true,
+					action_url: action,
+					id: itemIds,
+				});
 				this.toggleManageMode();
 				this.setState({
 					alerts: {},
@@ -464,6 +489,7 @@ const ListView = React.createClass({
 	toggleCreateModal(visible) {
 		this.setState({
 			showCreateForm: visible,
+			showIframe: visible, // Custom Action View
 		});
 	},
 	openCreateModal() {
@@ -593,6 +619,11 @@ const ListView = React.createClass({
 			</BlankState>
 		);
 	},
+	renderIframeView() { // Custom Action View
+		const { action_url, id } = this.state;
+		const iframeURL = `${Keystone.externalHost}/${action_url}/${id}`;
+		return <IframeContent src={iframeURL} show={this.state.showIframe} onCancel={this.closeCreateModal} onSave={this.onCreate} className={"full-screen"} />;
+	},
 	render() {
 		if (!this.props.ready) {
 			return (
@@ -603,8 +634,8 @@ const ListView = React.createClass({
 		}
 		return (
 			<div data-screen-id="list">
+				{this.renderIframeView()}
 				{(this.state.alerts) ? <AlertMessages alerts={this.state.alerts} /> : null}
-
 				{this.renderBlankState()}
 				{this.renderActiveState()}
 				<CreateForm
