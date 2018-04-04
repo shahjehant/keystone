@@ -26,7 +26,7 @@ import { deleteItem } from '../actions';
 
 import { upcase } from '../../../../utils/string';
 
-function getNameFromData (data) {
+function getNameFromData(data) {
 	if (typeof data === 'object') {
 		if (typeof data.first === 'string' && typeof data.last === 'string') {
 			return data.first + ' ' + data.last;
@@ -37,11 +37,11 @@ function getNameFromData (data) {
 	return data;
 }
 
-function smoothScrollTop () {
+function smoothScrollTop() {
 	if (document.body.scrollTop || document.documentElement.scrollTop) {
 		window.scrollBy(0, -50);
 		var timeOut = setTimeout(smoothScrollTop, 20);
-	}	else {
+	} else {
 		clearTimeout(timeOut);
 	}
 }
@@ -52,7 +52,7 @@ var EditForm = React.createClass({
 		data: React.PropTypes.object,
 		list: React.PropTypes.object,
 	},
-	getInitialState () {
+	getInitialState() {
 		return {
 			values: assign({}, this.props.data.fields),
 			confirmationDialog: null,
@@ -61,13 +61,13 @@ var EditForm = React.createClass({
 			focusFirstField: !this.props.list.nameField && !this.props.list.nameFieldIsFormHeader,
 		};
 	},
-	componentDidMount () {
+	componentDidMount() {
 		this.__isMounted = true;
 	},
-	componentWillUnmount () {
+	componentWillUnmount() {
 		this.__isMounted = false;
 	},
-	getFieldProps (field) {
+	getFieldProps(field) {
 		const props = assign({}, field);
 		const alerts = this.state.alerts;
 		// Display validation errors inline
@@ -85,43 +85,43 @@ var EditForm = React.createClass({
 		props.mode = 'edit';
 		return props;
 	},
-	handleChange (event) {
+	handleChange(event) {
 		const values = assign({}, this.state.values);
 
 		values[event.path] = event.value;
 		this.setState({ values });
 	},
 
-	toggleDeleteDialog () {
+	toggleDeleteDialog() {
 		this.setState({
 			deleteDialogIsOpen: !this.state.deleteDialogIsOpen,
 		});
 	},
-	toggleResetDialog () {
+	toggleResetDialog() {
 		this.setState({
 			resetDialogIsOpen: !this.state.resetDialogIsOpen,
 		});
 	},
-	handleReset () {
+	handleReset() {
 		this.setState({
 			values: assign({}, this.state.lastValues || this.props.data.fields),
 			resetDialogIsOpen: false,
 		});
 	},
-	handleDelete () {
+	handleDelete() {
 		const { data } = this.props;
 		this.props.dispatch(deleteItem(data.id, this.props.router));
 	},
-	handleKeyFocus () {
+	handleKeyFocus() {
 		const input = this.refs.keyOrIdInput;
 		input.select();
 	},
-	removeConfirmationDialog () {
+	removeConfirmationDialog() {
 		this.setState({
 			confirmationDialog: null,
 		});
 	},
-	updateItem () {
+	updateItem() {
 		const { data, list } = this.props;
 		const editForm = this.refs.editForm;
 		const formData = new FormData(editForm);
@@ -156,7 +156,7 @@ var EditForm = React.createClass({
 			}
 		});
 	},
-	renderKeyOrId () {
+	renderKeyOrId() {
 		var className = 'EditForm__key-or-id';
 		var list = this.props.list;
 
@@ -195,7 +195,7 @@ var EditForm = React.createClass({
 			);
 		}
 	},
-	renderNameField () {
+	renderNameField() {
 		var nameField = this.props.list.nameField;
 		var nameFieldIsFormHeader = this.props.list.nameFieldIsFormHeader;
 		var wrapNameField = field => (
@@ -218,11 +218,11 @@ var EditForm = React.createClass({
 			);
 		} else {
 			return wrapNameField(
-				<h2>{this.props.data.name || '(no name)'}</h2>
+				<h2>{this.props.data.name.replace(/&quot;/g, '"')  || '(no" name)'}</h2>
 			);
 		}
 	},
-	renderFormElements () {
+	renderFormElements() {
 		var headings = 0;
 
 		return this.props.list.uiElements.map((el, index) => {
@@ -300,7 +300,7 @@ var EditForm = React.createClass({
 			</FooterBar>
 		);
 	},
-	renderTrackingMeta () {
+	renderTrackingMeta() {
 		// TODO: These fields are visible now, so we don't want this. We may revisit
 		// it when we have more granular control over hiding fields in certain
 		// contexts, so I'm leaving this code here as a reference for now - JW
@@ -368,7 +368,7 @@ var EditForm = React.createClass({
 			</div>
 		) : null;
 	},
-	render () {
+	render() {
 		const list = this.props.list;
 
 		let message = `Are you sure you want to delete <strong>{this.props.data.name}?</strong>`;
