@@ -70,6 +70,7 @@ const ListView = React.createClass({
 			showIframe: false,
 			action_url: null,
 			id: null,
+			customUpdateValue: null,
 		};
 	},
 	componentWillMount() {
@@ -163,6 +164,11 @@ const ListView = React.createClass({
 			showUpdateForm: filter,
 		});
 	},
+	handlePromptInputChange(event) {
+		this.setState({
+			customUpdateValue: event.target.value,
+		})
+	},
 	massUpdate() {
 		// TODO: Implement update multi-item
 		console.log('Update ALL the things!');
@@ -246,13 +252,12 @@ const ListView = React.createClass({
 						label: 'Save',
 						body: (
 							<div>
-								<select>
-									{data && data.map(value => <p key={value.id} > {value.name}</p>)}
-								</select>
+								<lable style= {{color:'#7F7F7F'}}>Enter a Value: </lable>
+								<input style= {{padding: '0.75em', height: '2.0em', borderColor: '#ccc', borderWidth: 1, borderRadius: '0.3rem', borderStyle: 'solid'}} type="text" onChange={this.handlePromptInputChange} />
 							</div>
 						),
 						onConfirmation: () => {
-							this.props.dispatch(customAction(itemIds, action));
+							this.props.dispatch(customAction(itemIds, action, this.state.customUpdateValue));
 							this.toggleManageMode();
 							this.removeConfirmationDialog();
 						},

@@ -119,12 +119,12 @@ export function deleteItems(ids) {
 	};
 }
 
-export function customAction(ids, action, status) {
+export function customAction(ids, action, customUpdateValue) {
 	return (dispatch, getState) => {
 
 		let formData = new FormData();
 		formData.append('ids', ids);
-		formData.append('status', status);
+		formData.append('customUpdateValue', customUpdateValue);
 
 		xhr({
 			url: `/app/${action}`,
