@@ -17,7 +17,7 @@ const ItemsTable = React.createClass({
 		manageMode: PropTypes.bool.isRequired,
 		rowAlert: PropTypes.object.isRequired,
 	},
-	renderCols () {
+	renderCols() {
 		let cols = this.props.columns.map(col => (
 			<col key={col.path} width={col.width} />
 		));
@@ -42,7 +42,7 @@ const ItemsTable = React.createClass({
 			</colgroup>
 		);
 	},
-	renderHeaders () {
+	renderHeaders() {
 		let listControlCount = 0;
 
 		if (this.props.list.sortable) listControlCount++;
@@ -93,32 +93,34 @@ const ItemsTable = React.createClass({
 			</thead>
 		);
 	},
-	render () {
+	render() {
 		const { items } = this.props;
 		if (!items.results.length) return null;
 
 		const tableBody = (this.props.list.sortable) ? (
 			<DragDrop {...this.props} />
 		) : (
-			<tbody >
-				{items.results.map((item, i) => {
-					return (
-						<TableRow key={item.id}
-							deleteTableItem={this.props.deleteTableItem}
-							index={i}
-							sortOrder={item.sortOrder || 0}
-							id={item.id}
-							item={item}
-							{...this.props}
-						/>
-					);
-				})}
-			</tbody>
-		);
-
+				<tbody >
+					{items.results.map((item, i) => {
+						return (
+							<TableRow key={item.id}
+								deleteTableItem={this.props.deleteTableItem}
+								index={i}
+								sortOrder={item.sortOrder || 0}
+								id={item.id}
+								item={item}
+								{...this.props}
+							/>
+						);
+					})}
+				</tbody>
+			);
+		/** TO ADD SCROLL ON DIRECTORIES PAGES */
+		const directory_div_class = !this.props.list.scrollable ? 'ItemList-wrapper' : 'ItemList-wrapper-with-scroll';
+		const table_class = !this.props.list.scrollable ? 'Table ItemList' : 'Table ItemList-with-scroll';
 		return (
-			<div className="ItemList-wrapper">
-				<table cellPadding="0" cellSpacing="0" className="Table ItemList">
+			<div className={directory_div_class}>
+				<table cellPadding="0" cellSpacing="0" className={table_class}>
 					{this.renderCols()}
 					{this.renderHeaders()}
 					{tableBody}
