@@ -252,8 +252,8 @@ const ListView = React.createClass({
 						label: 'Save',
 						body: (
 							<div>
-								<lable style= {{color:'#7F7F7F'}}>Enter a Value: </lable>
-								<input style= {{padding: '0.75em', height: '2.0em', borderColor: '#ccc', borderWidth: 1, borderRadius: '0.3rem', borderStyle: 'solid'}} type="text" onChange={this.handlePromptInputChange} />
+								<lable style={{ color: '#7F7F7F' }}>Enter a Value: </lable>
+								<input style={{ padding: '0.75em', height: '2.0em', borderColor: '#ccc', borderWidth: 1, borderRadius: '0.3rem', borderStyle: 'solid' }} type="text" onChange={this.handlePromptInputChange} />
 							</div>
 						),
 						onConfirmation: () => {
@@ -447,6 +447,8 @@ const ListView = React.createClass({
 
 		let message = `Are you sure you want to delete <strong>${item.name}</strong>?`;
 
+
+
 		if (list.deletePrompt) {
 			message = list.deletePrompt;
 		}
@@ -457,7 +459,7 @@ const ListView = React.createClass({
 				label: 'Delete',
 				body: (
 					<div>
-						{message}
+						<span dangerouslySetInnerHTML={{ __html: message }}/>
 						<br />
 						<br />
 						This cannot be undone.

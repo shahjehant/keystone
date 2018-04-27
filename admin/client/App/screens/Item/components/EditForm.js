@@ -218,7 +218,7 @@ var EditForm = React.createClass({
 			);
 		} else {
 			return wrapNameField(
-				<h2>{this.props.data.name.replace(/&quot;/g, '"')  || '(no" name)'}</h2>
+				<h2>{this.props.data.name.replace(/&quot;/g, '"') || '(no" name)'}</h2>
 			);
 		}
 	},
@@ -255,7 +255,7 @@ var EditForm = React.createClass({
 			}
 		}, this);
 	},
-	renderFooterBar () {
+	renderFooterBar() {
 		if (this.props.list.noedit && this.props.list.nodelete) {
 			return null;
 		}
@@ -371,7 +371,7 @@ var EditForm = React.createClass({
 	render() {
 		const list = this.props.list;
 
-		let message = `Are you sure you want to delete <strong>{this.props.data.name}?</strong>`;
+		let message = `Are you sure you want to delete <strong>${this.props.data.name}?</strong>`;
 
 		if (list.deletePrompt) {
 			message = list.deletePrompt;
@@ -405,7 +405,7 @@ var EditForm = React.createClass({
 					onCancel={this.toggleDeleteDialog}
 					onConfirmation={this.handleDelete}
 				>
-					{message}
+					<span dangerouslySetInnerHTML={{ __html: message }} />
 					<br />
 					<br />
 					This cannot be undone.
