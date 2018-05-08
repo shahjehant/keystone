@@ -46,6 +46,13 @@ function smoothScrollTop() {
 	}
 }
 
+function quickScrollTop() {
+	if (document.body.scrollTop || document.documentElement.scrollTop) {
+		window.scrollBy(0, -50);
+		quickScrollTop();
+	}
+}
+
 var EditForm = React.createClass({
 	displayName: 'EditForm',
 	propTypes: {
@@ -125,14 +132,15 @@ var EditForm = React.createClass({
 		const { data, list } = this.props;
 		const editForm = this.refs.editForm;
 		const formData = new FormData(editForm);
-
 		// Show loading indicator
 		this.setState({
 			loading: true,
 		});
 
 		list.updateItem(data.id, formData, (err, data) => {
-			smoothScrollTop();
+
+			//  smoothScrollTop();
+			quickScrollTop();
 			if (err) {
 				this.setState({
 					alerts: {
