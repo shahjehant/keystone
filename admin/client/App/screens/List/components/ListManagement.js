@@ -6,6 +6,7 @@ import {
 	InlineGroupSection as Section,
 	Spinner,
 } from '../../../elemental';
+import _ from 'lodash';
 
 function ListManagement({
 	checkedItemCount,
@@ -27,21 +28,47 @@ function ListManagement({
 	if (!itemCount || (nodelete && noedit)) return null;
 
 	const buttonNoteStyles = { color: '#999', fontWeight: 'normal' };
-
 	const customActionButtons = [];
 	if (isOpen && currentList && currentList.customAction) {
-		for (const customAction of currentList.customAction) {
-			customActionButtons.push(<Section>
-				<GlyphButton
-					color="info"
-					disabled={!checkedItemCount}
-					glyph="download"
-					onClick={() => handleCustomAction(customAction)}
-					position="left"
-					variant="link">
-					{customAction.label}
-				</GlyphButton>
-			</Section>);
+		// SHOW DROPDOWN OPTION FOR CUSTOM ACTIONS IF  customActionType === 'dropdown'
+		if (currentList.customActionType === 'dropdown') {
+			const options = [];
+
+			options.push(<option >Select Action</option>);
+			for (const customAction of currentList.customAction) {
+				options.push(<option value={customAction.key}>{customAction.label} </option>);
+			}
+
+			customActionButtons.push(
+				<Section>
+					<select
+						style={{ width: 200, height: 33, borderWidth: 1, borderRadius: '0.3rem' }}
+						disabled={!checkedItemCount}
+						onChange={(event) => {
+							const selectedAction = _.find(currentList.customAction, { key: event.target.value });
+							if (selectedAction) {
+								handleCustomAction(selectedAction);
+							}
+						}}
+					>
+						{options}
+					</select>
+				</Section>
+			);
+		} else {
+			for (const customAction of currentList.customAction) {
+				customActionButtons.push(<Section>
+					<GlyphButton
+						color="info"
+						disabled={!checkedItemCount}
+						glyph="download"
+						onClick={() => handleCustomAction(customAction)}
+						position="left"
+						variant="link">
+						{customAction.label}
+					</GlyphButton>
+				</Section>);
+			}
 		}
 	}
 

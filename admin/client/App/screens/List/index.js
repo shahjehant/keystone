@@ -379,6 +379,9 @@ const ListView = React.createClass({
 					// columns
 					columnsActive={this.props.active.columns}
 					columnsAvailable={this.props.currentList.columns}
+
+					// Custom Create Button
+					customCreateButton={this.customCreateButton}
 				/>
 				<ListFilters
 					dispatch={this.props.dispatch}
@@ -459,7 +462,7 @@ const ListView = React.createClass({
 				label: 'Delete',
 				body: (
 					<div>
-						<span dangerouslySetInnerHTML={{ __html: message }}/>
+						<span dangerouslySetInnerHTML={{ __html: message }} />
 						<br />
 						<br />
 						This cannot be undone.
@@ -625,6 +628,15 @@ const ListView = React.createClass({
 				</h2>
 			</BlankState>
 		);
+	},
+	customCreateButton(action_type) {
+		let action = this.props.lists.currentList && this.props.lists.currentList.link && this.props.lists.currentList.link.create;
+		action = (action.length && action[0] === '/') ? action.slice(1) : action;
+		this.setState({
+			showIframe: true,
+			action_url: action,
+			id: action_type,
+		});
 	},
 	renderIframeView() { // Custom Action View
 		const { action_url, id } = this.state;
