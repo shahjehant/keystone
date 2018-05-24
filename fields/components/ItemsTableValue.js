@@ -32,6 +32,7 @@ function ItemsTableValue ({
 		'ItemList__value--truncate': truncate,
 	}, className);
 	props.to = linkRef;
+	props.title = props.children;
 
 	return <Component {...props} />;
 };
