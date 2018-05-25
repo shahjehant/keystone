@@ -91,7 +91,7 @@ const ListView = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		// Review and make it more generic to clear custom action view on link change
 		if (this.props && this.props.lists.currentList && this.props.lists.currentList.id !== 'list_items') {
-			this.setState({ showIframe: false, action_url: null, id: null });
+			this.setState({ showIframe: false, action_url: null, id: null, showCreateForm: false });
 		}
 
 		// We've opened a new list from the client side routing, so initialize
