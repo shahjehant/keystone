@@ -43,7 +43,7 @@ function ListManagement({
 				<Section>
 					<select
 						style={{ width: 200, height: 33, borderWidth: 1, borderRadius: '0.3rem' }}
-						disabled={!checkedItemCount}
+						// disabled={!checkedItemCount}
 						onChange={(event) => {
 							const selectedAction = _.find(currentList.customAction, { key: event.target.value });
 							if (selectedAction) {
