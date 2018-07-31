@@ -4,6 +4,7 @@ import {
 	ITEM_LOADING_ERROR,
 } from '../constants';
 const xhr = require('xhr');
+const jquery = require('jquery');
 const assign = require('object-assign');
 import { NETWORK_ERROR_RETRY_DELAY } from '../../../../constants';
 export function loadItems(options = {}) {
