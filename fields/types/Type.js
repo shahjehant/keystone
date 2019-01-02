@@ -106,10 +106,12 @@ Field.prototype.getOptions = function () {
 	if (!this.__options) {
 		this.__options = {};
 		var optionKeys = DEFAULT_OPTION_KEYS;
+
 		if (_.isArray(this._properties)) {
 			optionKeys = optionKeys.concat(this._properties);
 		}
 		optionKeys.forEach(function (key) {
+			// console.log(this[key])
 			if (this[key]) {
 				this.__options[key] = this[key];
 			} else if (this.options[key]) {
@@ -122,6 +124,8 @@ Field.prototype.getOptions = function () {
 		this.__options.hasFilterMethod = this.addFilterToQuery ? true : false;
 		this.__options.defaultValue = this.getDefaultValue();
 	}
+
+	// console.log(this.__options)
 	return this.__options;
 };
 

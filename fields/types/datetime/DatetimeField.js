@@ -30,8 +30,8 @@ module.exports = Field.create({
 
 	getInitialState () {
 		return {
-			dateValue: this.props.value && this.moment(this.props.value).format(this.dateInputFormat),
-			timeValue: this.props.value && this.moment(this.props.value).format(this.timeInputFormat),
+			dateValue: this.props.value && this.moment(this.props.value).format(this.props.dateFormat || this.dateInputFormat),
+			timeValue: this.props.value && this.moment(this.props.value).format(this.props.timeFormat || this.timeInputFormat),
 			tzOffsetValue: this.props.value ? this.moment(this.props.value).format(this.tzOffsetInputFormat) : this.moment().format(this.tzOffsetInputFormat),
 		};
 	},
@@ -106,6 +106,8 @@ module.exports = Field.create({
 	},
 
 	renderUI () {
+		var timePlaceholder = this.props.timePlaceholder || "HH:MM:SS am/pm"
+
 		var input;
 		if (this.shouldRenderField()) {
 			input = (
@@ -113,7 +115,7 @@ module.exports = Field.create({
 					<Group>
 						<Section grow>
 							<DateInput
-								format={this.dateInputFormat}
+								format={this.props.datePlaceholder || this.dateInputFormat}
 								name={this.getInputName(this.props.paths.date)}
 								onChange={this.dateChanged}
 								ref="dateInput"
@@ -125,7 +127,7 @@ module.exports = Field.create({
 								autoComplete="off"
 								name={this.getInputName(this.props.paths.time)}
 								onChange={this.timeChanged}
-								placeholder="HH:MM:SS am/pm"
+								placeholder={timePlaceholder}
 								value={this.state.timeValue}
 							/>
 						</Section>
