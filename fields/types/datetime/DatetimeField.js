@@ -115,7 +115,7 @@ module.exports = Field.create({
 					<Group>
 						<Section grow>
 							<DateInput
-								format={this.props.datePlaceholder || this.dateInputFormat}
+								format={this.props.dateFormat || this.dateInputFormat}
 								name={this.getInputName(this.props.paths.date)}
 								onChange={this.dateChanged}
 								ref="dateInput"
