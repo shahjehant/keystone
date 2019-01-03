@@ -89,8 +89,8 @@ module.exports = Field.create({
 	},
 
 	setNow () {
-		var dateValue = this.moment().format(this.dateInputFormat);
-		var timeValue = this.moment().format(this.timeInputFormat);
+		var dateValue = this.moment().format(this.props.dateFormat || this.dateInputFormat);
+		var timeValue = this.moment().format(this.props.timeFormat || this.timeInputFormat);
 		var tzOffsetValue = this.moment().format(this.tzOffsetInputFormat);
 		this.setState({
 			dateValue: dateValue,
