@@ -226,7 +226,15 @@
 			margin-left: 175px;
 			position: relative;
 			display: flex;
-    	flex-direction: column;
+			flex-direction: column;
+			
+			@media (max-width: @screen-xs-max) {
+				margin-left: 0;
+			}
+
+			> div {
+				width: 100% !important;
+			}
 		}
   }
 }
