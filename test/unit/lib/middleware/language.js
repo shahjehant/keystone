@@ -69,7 +69,7 @@ describe('language', function () {
 		});
 		var expected = 'zh-CN';
 		var req = mockRequest({
-			acceptLanguage: 'zh-CN;1,en-US;q=0.8'
+			acceptLanguage: 'zh-CN;q=1,en-US;q=0.8'
 		});
 		var res = mockResponse();
 		var middleware = language(keystone);
@@ -111,6 +111,28 @@ describe('language', function () {
 				language(keystone)(mockRequest(), res, function (err) {
 					demand(err).be(undefined);
 					demand(getCookieName(res)).eql(expected);
+					done();
+				});
+			});
+
+		});
+
+		describe('with custom cookie options', function () {
+			it('must create a custom language cookie', function (done) {
+				var keystone = keystoneOptions({
+					'language options': {
+						'language cookie options': {
+							maxAge: 24*3600*1000,
+							secure: true
+						}
+					}
+				});
+				var res = mockResponse();
+				var expected = true;
+
+				language(keystone)(mockRequest(), res, function (err) {
+					demand(err).be(undefined);
+					demand(res.cookie.secure).eql(expected);
 					done();
 				});
 			});
