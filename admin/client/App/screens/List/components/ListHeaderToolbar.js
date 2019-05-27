@@ -83,7 +83,6 @@ var ListHeaderToolbar = React.createClass({
 		});
 	},
 	render() {
-		console.log('props', this.props.list)
 		return (
 			<span>
 				<Group block aphroditeStyles={classes.wrapper}>
