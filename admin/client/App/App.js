@@ -13,6 +13,7 @@ import MobileNavigation from './components/Navigation/Mobile';
 import PrimaryNavigation from './components/Navigation/Primary';
 import SecondaryNavigation from './components/Navigation/Secondary';
 import Footer from './components/Footer';
+import { Header } from './components/Header';
 
 import IframeContent from './shared/IframeContent';
 
@@ -21,6 +22,19 @@ const classes = {
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: '100vh',
+	},
+	header: {
+		position: "sticky", 
+		top: 0,
+		backgroundColor: "#1385e5",
+		color: "white",
+		zIndex: 1,
+		minHeight: '40px',
+	},
+	cover: {
+		objectFit: 'cover',
+		minWidth: '180px',
+		minHeight: '40px',
 	},
 	body: {
 		flexGrow: 1,
@@ -65,7 +79,22 @@ const App = (props) => {
 	const currentSectionKey = (currentSection && currentSection.key) || 'dashboard';
 	return (
 		<div className={css(classes.wrapper)}>
-			<header>
+			<div className={css(classes.header)}>
+				<div style={{minWidth: '180px', float: 'left'}}>
+					<a href="/" title="Front page - Mojo Manager">
+						<img width="175" height="40" src="../../secure/images/header_logo.png"></img> 
+					</a>
+				</div>
+				<div style={{paddingLeft: '30px', float: 'left', fontFamily: "'Faster One', cursive", fontSize: '28px'}}>
+					{Keystone.user.companyName}
+				</div>
+				<div style={{float: 'right', paddingRight: '30px', paddingTop: '8px'}}>					
+					Signed in as, <b>{Keystone.user.name}</b>
+					<a href="/secure/signout" style={{paddingLeft: '16px', cursor: 'pointer', color: 'white'}}>Sign Out</a>  					
+				</div>
+				
+			</div>		
+			<header>				
 				<MobileNavigation
 					brand={Keystone.brand}
 					currentListKey={props.params.listId}
@@ -73,6 +102,14 @@ const App = (props) => {
 					sections={Keystone.nav.sections}
 					signoutUrl={Keystone.signoutUrl}
 				/>
+				{/* <Header
+					appversion={Keystone.appversion}
+					backUrl={Keystone.backUrl}
+					brand={Keystone.brand}
+					User={Keystone.User}
+					user={Keystone.user}
+					version={Keystone.version}
+				/> */}
 				<PrimaryNavigation
 					currentSectionKey={currentSectionKey}
 					brand={Keystone.brand}

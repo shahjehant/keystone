@@ -36,12 +36,13 @@ module.exports = function IndexRoute (req, res) {
 		lists: lists,
 		nav: nav,
 		orphanedLists: orphanedLists,
-		signoutUrl: keystone.get('signout url'),
+		signoutUrl: keystone.get('signout url'),		
+
 		user: {
 			id: req.user.id,
 			token: req.user.token,
 			name: UserList.getDocumentName(req.user) || '(no name)',
-		},
+			companyName: req.user.client_id.name,		},
 		userList: UserList.key,
 		version: keystone.version,
 		wysiwyg: { options: {

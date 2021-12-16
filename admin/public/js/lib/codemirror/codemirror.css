@@ -1,5 +1,7 @@
 /* BASICS */
 
+@import url('https://fonts.googleapis.com/css?family=Faster+One&family=Monoton&family=Pacifico&display=swap');
+
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
