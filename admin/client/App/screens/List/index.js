@@ -425,10 +425,11 @@ const ListView = React.createClass({
 		var self = this;
 		this.props.currentList.loadItems({
 			expandRelationshipFilters: false,
-			filters: {
-				fetch_all_data: true,
-				item_count: this.props.currentList && this.props.currentList.items && this.props.currentList.items.count,
-			},
+			filters: this.props.active.filters,
+			// filters: {
+			// 	fetch_all_data: true,
+			// 	item_count: this.props.currentList && this.props.currentList.items && this.props.currentList.items.count,
+			// },
 		}, function (err, data) {
 			data.results.forEach(item => {
 				checkedItems[item.id] = true;
