@@ -26,8 +26,9 @@ const classes = {
 
 const App = (props) => {
 	const listsByPath = require('../utils/lists').listsByPath;
+	console.log('listsByPath', listsByPath, 'propsss-->', props)
 	let children = props.children;
-	// If we're on either a list or an item view
+	// If we're on either a list or an item 
 	let currentList, currentSection;
 	if (props.params.listId) {
 		currentList = listsByPath[props.params.listId];
@@ -36,7 +37,7 @@ const App = (props) => {
 		if (!currentList) {
 			children = (
 				<Container>
-					<p>List not found!</p>
+					<p>Page not found!</p>
 					<Link to={`${Keystone.adminPath}`}>
 						Go back home
 					</Link>
