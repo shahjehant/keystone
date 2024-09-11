@@ -44,6 +44,8 @@ const classes = {
 const App = (props) => {
 	const listsByPath = require('../utils/lists').listsByPath;
 	let children = props.children;
+	console.log("listsByPath", listsByPath, "props", props)
+
 	// If we're on either a list or an item view
 	let currentList, currentSection;
 	if (props.params.listId) {
