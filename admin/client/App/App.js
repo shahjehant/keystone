@@ -45,7 +45,9 @@ const App = (props) => {
 	const listsByPath = require('../utils/lists').listsByPath;
 	let children = props.children;
 	console.log("listsByPath", listsByPath, "props", props)
-
+	fetch('http://localhost:3001/app/users/me').then(res=> res.json()).then(
+		result => console.log("result-----USER:", result)
+	).catch(e => console.log("USER ERR->>", e))
 	// If we're on either a list or an item view
 	let currentList, currentSection;
 	if (props.params.listId) {
@@ -65,7 +67,7 @@ const App = (props) => {
 			} else {
 				children = (
 					<Container>
-						<p>List not found!</p>
+						<p>Page not found!</p>
 						<Link to={`${Keystone.adminPath}`}>
 							Go back home
 						</Link>
