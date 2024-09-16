@@ -44,7 +44,9 @@ const classes = {
 const App = (props) => {
 	const listsByPath = require('../utils/lists').listsByPath;
 	let children = props.children;
-	console.log("listsByPath", listsByPath, "props", props)
+	console.log("listsByPath", listsByPath, "props", props, "WINDOWS:")
+	console.log("Window:", window.location)
+	console.log("Keystone.user.token:", Keystone.user.token)
 	fetch('http://localhost:3001/app/users/me').then(res=> res.json()).then(
 		result => console.log("result-----USER:", result)
 	).catch(e => console.log("USER ERR->>", e))
