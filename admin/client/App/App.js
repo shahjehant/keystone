@@ -46,8 +46,17 @@ const App = (props) => {
 	let children = props.children;
 	console.log("listsByPath", listsByPath, "props", props, "WINDOWS:")
 	console.log("Window:", window.location)
-	console.log("Keystone.user.token:", Keystone.user.token)
-	fetch('http://localhost:3001/app/users/me').then(res=> res.json()).then(
+	console.log("Keystone.user:", Keystone.user);
+	console.log("Keystone:", Keystone.user);
+
+
+	const apiHeaders = {
+		headers: {
+			'Cache-Control': 'no-cache',
+			'Authorization': Keystone.user.token
+		}
+	}
+	fetch('http://localhost:3001/app/users/me', apiHeaders).then(res=> res.json()).then(
 		result => console.log("result-----USER:", result)
 	).catch(e => console.log("USER ERR->>", e))
 	// If we're on either a list or an item view
