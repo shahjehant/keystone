@@ -75,9 +75,7 @@ const App = (props) => {
 		for (const role of userRoles) {
 		  const allowedRoutes = rolePermissions[role] || [];
 		  for (const route of allowedRoutes) {
-			// Convert route patterns like '/orders/:id' to regex
-			const regex = new RegExp(`^${route.replace(/:\w+/g, '\\w+')}$`);
-			if (regex.test(currentPath)) {
+			if (currentPath == route) {
 			  return true;
 			}
 		  }
@@ -111,6 +109,7 @@ const App = (props) => {
 				);
 			}
 		} else {
+			console.log("ELSE1", !isRouteAllowed(props.params.listId))
 			if (!isRouteAllowed(props.params.listId)) {
 				children = (
 				  <Container>
