@@ -3,7 +3,7 @@
  * contains common things like navigation, footer, etc.
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container } from './elemental';
 import { Link } from 'react-router';
 import { css } from 'glamor';
@@ -13,6 +13,7 @@ import MobileNavigation from './components/Navigation/Mobile';
 import PrimaryNavigation from './components/Navigation/Primary';
 import SecondaryNavigation from './components/Navigation/Secondary';
 import Footer from './components/Footer';
+import { rolePermissions } from '../constants';
 // import { Header } from './components/Header';
 
 import IframeContent from './shared/IframeContent';
@@ -42,6 +43,7 @@ const classes = {
 };
 
 const App = (props) => {
+	const [userRoles, setUserRoles] = useState([]);
 	const listsByPath = require('../utils/lists').listsByPath;
 	let children = props.children;
 	console.log("listsByPath", listsByPath, "props", props, "WINDOWS:")
@@ -50,15 +52,38 @@ const App = (props) => {
 	console.log("Keystone:", Keystone.user);
 
 
-	const apiHeaders = {
-		headers: {
-			'Cache-Control': 'no-cache',
-			'Authorization': Keystone.user.token
+	useEffect(() => {
+		const apiHeaders = {
+			headers: {
+				"Cache-Control": "no-cache",
+				Authorization: Keystone.user.token,
+			},
+		};
+		fetch("http://localhost:3001/app/users/me", apiHeaders)
+			.then((res) => res.json())
+			.then((user) => {
+				console.log("result-----USER:", user);
+				setUserRoles(user.rolesName);
+
+				
+			})
+			.catch((e) => console.log("USER ERR->>", e));
+	}, []);
+
+	  // Helper function to determine if the current path is allowed for the user's roles
+	  const isRouteAllowed = (currentPath) => {
+		for (const role of userRoles) {
+		  const allowedRoutes = rolePermissions[role] || [];
+		  for (const route of allowedRoutes) {
+			// Convert route patterns like '/orders/:id' to regex
+			const regex = new RegExp(`^${route.replace(/:\w+/g, '\\w+')}$`);
+			if (regex.test(currentPath)) {
+			  return true;
+			}
+		  }
 		}
-	}
-	fetch('http://localhost:3001/app/users/me', apiHeaders).then(res=> res.json()).then(
-		result => console.log("result-----USER:", result)
-	).catch(e => console.log("USER ERR->>", e))
+		return false;
+	  };
 	// If we're on either a list or an item view
 	let currentList, currentSection;
 	if (props.params.listId) {
@@ -86,8 +111,17 @@ const App = (props) => {
 				);
 			}
 		} else {
+			if (!isRouteAllowed(props.params.listId)) {
+				children = (
+				  <Container>
+					<p>Page not found!</p>
+					<Link to={`${Keystone.adminPath}`}>Go back home</Link>
+				  </Container>
+				);
+			  } else {
 			// Get the current section we're in for the navigation
 			currentSection = Keystone.nav.by.list[currentList.key];
+			  }
 		}
 	}
 	// Default current section key to dashboard
