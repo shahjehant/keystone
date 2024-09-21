@@ -91,9 +91,12 @@ class App extends Component {
   isRouteAllowed(currentPath) {
     const { userRoles } = this.state;
 
+    console.log("userRoles", userRoles)
     for (let i = 0; i < userRoles.length; i++) {
       const role = userRoles[i];
       const allowedRoutes = rolePermissions[role] || [];
+    console.log("rolePermissions", rolePermissions)
+    console.log("allowedRoutes", allowedRoutes)
 
       for (let j = 0; j < allowedRoutes.length; j++) {
         const route = allowedRoutes[j];
@@ -118,9 +121,9 @@ class App extends Component {
     console.log('Keystone.user:', Keystone.user);
     console.log('Keystone:', Keystone.user);
 
-    if (loading) {
-      return <div>Loading...</div>;
-    }
+    // if (loading) {
+    //   return <div>Loading...</div>;
+    // }
 
     // If we're on either a list or an item view
     let currentList, currentSection;
