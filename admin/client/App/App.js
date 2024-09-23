@@ -48,6 +48,7 @@ class App extends Component {
     
     this.state = {
       userRoles: [],
+      isSuperAdmin: false,
       loading: true, // To handle loading state
     };
     
@@ -74,6 +75,7 @@ class App extends Component {
         this.setState({
           userRoles: user.rolesName,
           loading: false,
+          isSuperAdmin: (user.role && user.role == "SuperAdmin") ? true : false
         });
       })
       .catch((e) => {
@@ -89,9 +91,13 @@ class App extends Component {
    * @returns {boolean} - Returns true if the route is allowed, else false
    */
   isRouteAllowed(currentPath) {
-    const { userRoles } = this.state;
-
+    const { userRoles, isSuperAdmin } = this.state;
+   
+    if(isSuperAdmin){
+      return true;
+    }
     console.log("userRoles", userRoles)
+    if(userRoles && userRoles.length > 0){
     for (let i = 0; i < userRoles.length; i++) {
       const role = userRoles[i];
       const allowedRoutes = rolePermissions[role] || [];
@@ -106,6 +112,7 @@ class App extends Component {
         }
       }
     }
+  }
     return false;
   }
 

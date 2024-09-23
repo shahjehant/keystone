@@ -44,7 +44,7 @@ exports.NETWORK_ERROR_RETRY_DELAY = 500; // in ms
 
 // routes
 export const rolePermissions = {
-	'User Management': ['users', 'sessions'],
+	'User Management': ['users', 'sessions', 'companies', 'sub_companies', 'stores'],
 	'Order Management': [
 		'sale_ledgers',
 		'sale_ledger_items',
@@ -71,6 +71,8 @@ export const rolePermissions = {
 		'case_messages',
 		'resolved_messages',
 		'waiting_messages',
-		'message_templates'],
+		'message_templates',
+	'message_conversations',
+'message_attachments'],
 	// Add more roles and their corresponding routes as needed
   };
