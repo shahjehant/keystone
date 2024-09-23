@@ -55,7 +55,8 @@ export const rolePermissions = {
 		'adjust_outs',
 		'credit_note_outs',
 		'shipping_labels',
-		'previous_orders'],
+		'previous_orders',
+	'customers'],
 	'Stock Management': [
 		'stock_in_ledgers',
 		'stock_out_ledgers',],
