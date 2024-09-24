@@ -41,3 +41,39 @@ exports.spacing = {
 
 exports.TABLE_CONTROL_COLUMN_WIDTH = 26;  // icon + padding
 exports.NETWORK_ERROR_RETRY_DELAY = 500; // in ms
+
+// routes
+export const rolePermissions = {
+	'User Management': ['users', 'sessions', 'companies', 'sub_companies', 'stores'],
+	'Order Management': [
+		'sale_ledgers',
+		'sale_ledger_items',
+		'sale_order_batches',
+		'sale_order_fee_batches',
+		'dispatch_order_batches',
+		'transfer_outs',
+		'adjust_outs',
+		'credit_note_outs',
+		'shipping_labels',
+		'previous_orders',
+	'customers'],
+	'Stock Management': [
+		'stock_in_ledgers',
+		'stock_out_ledgers',],
+	'Purchase Management': ['purchase_orders',
+		'purchase_credit_notes',
+		'purchase_replacemnet_ins',
+		'purchase_return_ins',
+		'adjust_ins',
+		'transfer_ins',],
+	'Message Administrator': [
+		'messages',
+		'return_messages',
+		'case_messages',
+		'resolved_messages',
+		'waiting_messages',
+		'message_templates',
+	'message_conversations',
+'message_attachments'],
+	// Add more roles and their corresponding routes as needed
+  };
