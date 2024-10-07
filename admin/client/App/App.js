@@ -63,7 +63,7 @@ class App extends Component {
       },
     };
 
-    fetch('http://localhost:3001/app/users/me', apiHeaders)
+    fetch('https://test.mojomanager.com/app/users/me', apiHeaders)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
