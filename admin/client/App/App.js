@@ -174,7 +174,7 @@ class App extends Component {
         if (!this.isRouteAllowed(params.listId)) {
           children = (
             <Container>
-              <p>Page not found!</p>
+              <p>Access blocked!</p>
               <Link to={`${Keystone.adminPath}`}>Go back home</Link>
             </Container>
           );
