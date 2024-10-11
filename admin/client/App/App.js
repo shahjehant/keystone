@@ -63,7 +63,7 @@ class App extends Component {
       },
     };
 
-    fetch('https://test.mojomanager.com/app/users/me', apiHeaders)
+    fetch(`${window.location.origin}/app/users/me`, apiHeaders)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -95,7 +95,7 @@ class App extends Component {
    */
   isRouteAllowed(currentPath) {
     const { userRoles, isSuperAdmin } = this.state;
-   
+    console.log("isSuperAdmin", isSuperAdmin, "state:", this.state)
     if(isSuperAdmin){
       return true;
     }
