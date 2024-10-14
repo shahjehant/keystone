@@ -71,7 +71,7 @@ class App extends Component {
         return res.json();
       })
       .then((userDetails) => {
-        console.log('result-----userDetails:', userDetails);
+        console.log('Branch: fix/page-loading-fix-->result-----userDetails:', userDetails);
         const { user } = userDetails;
         console.log('result-----USER:', user);
 
