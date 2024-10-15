@@ -54,7 +54,7 @@ const hoverAndFocusStyles = {
 const classes = {
 	base: {
 		backgroundColor: 'white',
-		borderRadius: theme.borderRadius.default,
+		borderRadius: (theme.borderRadius && theme.borderRadius.default) || '0.3rem',
 		border: `1px solid ${theme.input.border.color.default}`,
 		display: 'inline-block',
 		height: 'auto',

@@ -124,7 +124,7 @@ const classes = {
 	},
 	dialog: {
 		backgroundColor: 'white',
-		borderRadius: theme.borderRadius.default,
+		borderRadius: (theme.borderRadius && theme.borderRadius.default) || '0.3rem',
 		paddingBottom: theme.modal.padding.dialog.vertical,
 		paddingLeft: theme.modal.padding.dialog.horizontal,
 		paddingRight: theme.modal.padding.dialog.horizontal,

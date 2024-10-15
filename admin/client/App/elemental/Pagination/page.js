@@ -44,7 +44,7 @@ const classes = {
 		appearance: 'none',
 		background: 'none',
 		border: '1px solid transparent',
-		borderRadius: theme.borderRadius.default,
+		borderRadius: (theme.borderRadius && theme.borderRadius.default) || '0.3rem',
 		color: theme.pagination.color,
 		cursor: 'pointer',
 		display: 'inline-block',
