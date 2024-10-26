@@ -71,9 +71,7 @@ class App extends Component {
         return res.json();
       })
       .then((userDetails) => {
-        console.log('result-----userDetails:', userDetails);
         const { user } = userDetails;
-        console.log('result-----USER:', user);
 
         this.setState({
           userRoles: user.rolesName,
@@ -82,7 +80,6 @@ class App extends Component {
         });
       })
       .catch((e) => {
-        console.error('USER ERR->>', e);
         this.setState({ loading: false });
         // Optionally, handle unauthorized access here
       });
@@ -95,17 +92,13 @@ class App extends Component {
    */
   isRouteAllowed(currentPath) {
     const { userRoles, isSuperAdmin } = this.state;
-    console.log("isSuperAdmin", isSuperAdmin, "state:", this.state)
     if(isSuperAdmin){
       return true;
     }
-    console.log("userRoles", userRoles)
     if(userRoles && userRoles.length > 0){
     for (let i = 0; i < userRoles.length; i++) {
       const role = userRoles[i];
       const allowedRoutes = rolePermissions[role] || [];
-    console.log("rolePermissions", rolePermissions)
-    console.log("allowedRoutes", allowedRoutes)
 
       for (let j = 0; j < allowedRoutes.length; j++) {
         const route = allowedRoutes[j];
@@ -126,10 +119,7 @@ class App extends Component {
     const listsByPath = require('../utils/lists').listsByPath;
     let children = propChildren;
 
-    console.log('listsByPath', listsByPath, 'props', this.props, 'WINDOWS:');
-    console.log('Window:', window.location);
-    console.log('Keystone.user:', Keystone.user);
-    console.log('Keystone:', Keystone.user);
+
 
     // if (loading) {
     //   return <div>Loading...</div>;
@@ -148,7 +138,6 @@ class App extends Component {
         });
         if (section) {
           const path = _.find(section.lists, { path: currentPath, external: true });
-          console.log(path);
           children = (
             <IframeContent
               src={path.href}
@@ -170,7 +159,6 @@ class App extends Component {
           );
         }
       } else {
-        console.log('ELSE1', !this.isRouteAllowed(params.listId));
         if (!this.isRouteAllowed(params.listId)) {
           children = (
             <Container>
