@@ -221,7 +221,19 @@ const ListView = React.createClass({
 	customAction(customActionData) {
 		const { action, type, multiple, data, status } = customActionData;
 		const { checkedItems } = this.state;
+		console.log("checkedItems:", checkedItems)
+
+		console.log("action:", action)
+
 		const itemIds = Object.keys(checkedItems);
+		  // Retrieve existing actions object from localStorage or initialize it
+		  const storedActions = JSON.parse(localStorage.getItem('actions')) || {};
+
+		  // Update the checked items for the specific action
+		  storedActions[action] = itemIds;
+		
+		  // Save the updated actions object to localStorage
+		  localStorage.setItem('actions', JSON.stringify(storedActions));
 		if (type === 'download') {
 			if (this.isMultipleAllowed(itemIds, multiple)) {
 				this.props.dispatch(customActionDownload(itemIds, action));
