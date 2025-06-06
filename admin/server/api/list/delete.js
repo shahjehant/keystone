@@ -30,6 +30,7 @@ module.exports = function (req, res) {
 			return res.apiError(403, 'not allowed', 'You can not delete yourself');
 		}
 	}
+	console.log("req.user framework", req.user)
 	var deletedCount = 0;
 	var deletedIds = [];
 	req.list.model.find().where('_id').in(ids).exec(function (err, results) {
