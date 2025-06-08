@@ -193,6 +193,8 @@ const classes = {
 		[`@media (max-width: ${theme.breakpoint.desktopMax})`]: {
 			display: 'none',
 		},
+		background: '#fff',
+		color:'#000'
 	},
 	filter: {
 		[`@media (max-width: ${theme.breakpoint.tabletPortraitMax})`]: {

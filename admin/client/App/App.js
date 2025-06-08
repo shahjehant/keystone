@@ -194,7 +194,7 @@ class App extends Component {
             style={{
               paddingLeft: '30px',
               float: 'left',
-              fontFamily: "'Faster One', cursive",
+              font-family: "'Inter', sans-serif",
               fontSize: '28px',
             }}
           >
@@ -204,7 +204,7 @@ class App extends Component {
             Signed in as, <b>{Keystone.user.name}</b>
             <a
               href="/secure/signout"
-              style={{ paddingLeft: '16px', cursor: 'pointer', color: 'white' }}
+              style={{ paddingLeft: '16px', cursor: 'pointer', color: 'inherit' }}
             >
               Sign Out
             </a>
