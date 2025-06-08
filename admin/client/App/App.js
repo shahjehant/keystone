@@ -27,10 +27,14 @@ const classes = {
   header: {
     position: 'sticky',
     top: 0,
-    backgroundColor: '#1385e5',
-    color: 'white',
+    // backgroundColor: '#1385e5',
+    // color: 'white',
     zIndex: 1,
     minHeight: '40px',
+    background: '#fff',
+    color: '#000',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+    zIndex: 10,
   },
   cover: {
     objectFit: 'cover',
@@ -39,6 +43,7 @@ const classes = {
   },
   body: {
     flexGrow: 1,
+    background: '#fff'
   },
 };
 
