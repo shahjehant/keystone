@@ -72,11 +72,12 @@ class App extends Component {
       })
       .then((userDetails) => {
         const { user } = userDetails;
-
+        console.log("User is...", user)
         this.setState({
           userRoles: user.rolesName,
           loading: false,
-          isSuperAdmin: (user.role && user.role == "SuperAdmin") ? true : false
+          isSuperAdmin: (user.role && user.role == "SuperAdmin") ? true : false,
+          canLogin: user.isAdmin
         });
       })
       .catch((e) => {
@@ -118,12 +119,7 @@ class App extends Component {
 
     const listsByPath = require('../utils/lists').listsByPath;
     let children = propChildren;
-
-
-
-    // if (loading) {
-    //   return <div>Loading...</div>;
-    // }
+    console.log("this.props", this.props, this.state)
 
     // If we're on either a list or an item view
     let currentList, currentSection;
@@ -162,7 +158,7 @@ class App extends Component {
         if (!this.isRouteAllowed(params.listId)) {
           children = (
             <Container>
-              <p>Access blocked!</p>
+              <p>{loading ? "Loading..." : "Access blocked!"}</p>
               <Link to={`${Keystone.adminPath}`}>Go back home</Link>
             </Container>
           );
