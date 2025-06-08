@@ -121,10 +121,6 @@ class App extends Component {
 	const { loading, canLogin, isSuperAdmin } = this.state;
 	const { children: propChildren, params, location } = this.props;
   
-  console.log("loading...")
-  if(!canLogin && !isSuperAdmin){
-    window.location.href ='/';
-  }
 	const listsByPath = require('../utils/lists').listsByPath;
 	let children = propChildren;
 
