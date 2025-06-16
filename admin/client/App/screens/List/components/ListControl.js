@@ -26,7 +26,7 @@ var ListControl = React.createClass({
 		}
 
 		var renderButton = (
-			<button type="button" disabled={this.props.type === 'delete' && this.props.canDelete ? true : false} onClick={this.props.onClick} className={className} tabIndex={tabindex}>
+			<button type="button" style={{ cursor: this.props.type === 'delete' && !this.props.canDelete ? 'not-allowed' : 'pointer'}} onClick={this.props.onClick} className={className} tabIndex={tabindex}>
 				<span className={icon} />
 			</button>
 		);

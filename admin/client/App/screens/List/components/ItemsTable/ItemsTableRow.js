@@ -56,8 +56,8 @@ const ItemsRow = React.createClass({
 				<ListControl key="_check" type="check" active={this.props.checkedItems[itemId]} />
 			) : (
 				this.props.canDelete ? 
-				<ListControl key="_delete" onClick={(e) => this.props.deleteTableItem(item, e)} type="delete" />
-				: <ListControl key="_delete" onClick={(e) => console.log('not-allowed')} type="delete" />
+				<ListControl key="_delete" onClick={(e) => this.props.deleteTableItem(item, e)} type="delete" canDelete={this.props.canDelete} />
+				: <ListControl key="_delete" onClick={(e) => console.log('not-allowed')} type="delete" canDelete={false} />
 			));
 		}
 
