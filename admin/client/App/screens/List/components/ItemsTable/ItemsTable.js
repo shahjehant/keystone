@@ -5,6 +5,7 @@ import TableRow from './ItemsTableRow';
 import DragDrop from './ItemsTableDragDrop';
 
 import { TABLE_CONTROL_COLUMN_WIDTH } from '../../../../../constants';
+import { getUserDetails } from '../../../../../utils/getUserDetails';
 
 const ItemsTable = React.createClass({
 	propTypes: {
@@ -17,6 +18,24 @@ const ItemsTable = React.createClass({
 		manageMode: PropTypes.bool.isRequired,
 		rowAlert: PropTypes.object.isRequired,
 	},
+	getInitialState () {
+		return {
+		  canDelete: false,
+		  userDetailsLoaded: false
+		};
+	  },
+	componentDidMount () {
+		// Fetch user details when component mounts
+	    getUserDetails().then(({ canDelete }) => {
+		  this.setState({ 
+			canDelete,
+			userDetailsLoaded: true 
+		  });
+		}).catch(error => {
+		  console.error('Error loading user details:', error);
+		  this.setState({ userDetailsLoaded: true });
+		});
+	  },
 	renderCols() {
 		let cols = this.props.columns.map(col => (
 			<col key={col.path} width={col.width} />
@@ -95,6 +114,7 @@ const ItemsTable = React.createClass({
 	},
 	render() {
 		const { items } = this.props;
+		const { canDelete } = this.state;
 		if (!items.results.length) return null;
 
 		const tableBody = (this.props.list.sortable) ? (
@@ -109,6 +129,7 @@ const ItemsTable = React.createClass({
 								sortOrder={item.sortOrder || 0}
 								id={item.id}
 								item={item}
+								canDelete={canDelete}
 								{...this.props}
 							/>
 						);

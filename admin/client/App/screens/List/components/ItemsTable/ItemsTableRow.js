@@ -13,7 +13,6 @@ import {
 	setRowAlert,
 	moveItem,
 } from '../../actions';
-import { getUserDetails } from '../../../../../utils/getUserDetails';
 
 const ItemsRow = React.createClass({
 	propTypes: {
@@ -27,25 +26,9 @@ const ItemsRow = React.createClass({
 		connectDragSource: React.PropTypes.func,  // eslint-disable-line react/sort-prop-types
 		connectDropTarget: React.PropTypes.func,  // eslint-disable-line react/sort-prop-types
 		connectDragPreview: React.PropTypes.func, // eslint-disable-line react/sort-prop-types
+		// eslint-disable-next-line react/sort-prop-types
+		canDelete: React.PropTypes.bool,
 	},
-	getInitialState () {
-		return {
-		  canDelete: false,
-		  userDetailsLoaded: false
-		};
-	  },
-	componentDidMount () {
-		// Fetch user details when component mounts
-	    getUserDetails().then(({ canDelete }) => {
-		  this.setState({ 
-			canDelete,
-			userDetailsLoaded: true 
-		  });
-		}).catch(error => {
-		  console.error('Error loading user details:', error);
-		  this.setState({ userDetailsLoaded: true });
-		});
-	  },
 	renderRow (item) {
 		const itemId = item.id;
 		const rowClassname = classnames({
@@ -72,10 +55,10 @@ const ItemsRow = React.createClass({
 			cells.unshift(this.props.manageMode ? (
 				<ListControl key="_check" type="check" active={this.props.checkedItems[itemId]} />
 			) : (
-				this.state.canDelete ? 
-				<ListControl key="_delete" onClick={(e) => console.log('not allowed')} type="delete" style={{ cursor: 'not-allowed' }} />
-				:
+				this.props.canDelete ? 
 				<ListControl key="_delete" onClick={(e) => this.props.deleteTableItem(item, e)} type="delete" />
+				: ' '
+
 			));
 		}
 
