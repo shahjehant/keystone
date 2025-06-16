@@ -47,7 +47,6 @@ const ItemsRow = React.createClass({
 		});
 	  },
 	renderRow (item) {
-		console.log(getUserDetails, )
 		const itemId = item.id;
 		const rowClassname = classnames({
 			'ItemList__row--dragging': this.props.isDragging,
@@ -70,11 +69,12 @@ const ItemsRow = React.createClass({
 
 		// add delete/check icon when applicable
 		if (!this.props.list.nodelete) {
-			console.log("DELETE ITEMTABLEROWS", this.props)
 			cells.unshift(this.props.manageMode ? (
 				<ListControl key="_check" type="check" active={this.props.checkedItems[itemId]} />
 			) : (
-				this.state.canDelete &&
+				this.state.canDelete ? 
+				<ListControl key="_delete" onClick={(e) => console.log('not allowed')} type="delete" style={{ cursor: 'not-allowed' }} />
+				:
 				<ListControl key="_delete" onClick={(e) => this.props.deleteTableItem(item, e)} type="delete" />
 			));
 		}
