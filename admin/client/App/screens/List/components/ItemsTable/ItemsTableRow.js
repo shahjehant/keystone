@@ -57,8 +57,7 @@ const ItemsRow = React.createClass({
 			) : (
 				this.props.canDelete ? 
 				<ListControl key="_delete" onClick={(e) => this.props.deleteTableItem(item, e)} type="delete" />
-				: ' '
-
+				: <ListControl key="_delete" onClick={(e) => console.log('not-allowed')} type="delete" />
 			));
 		}
 

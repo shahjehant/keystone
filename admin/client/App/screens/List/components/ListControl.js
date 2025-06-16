@@ -3,6 +3,7 @@ import classnames from 'classnames';
 
 var ListControl = React.createClass({
 	propTypes: {
+		canDelete: React.PropTypes.bool,
 		dragSource: React.PropTypes.func,
 		onClick: React.PropTypes.func,
 		type: React.PropTypes.oneOf(['check', 'delete', 'sortable']).isRequired,
@@ -25,7 +26,7 @@ var ListControl = React.createClass({
 		}
 
 		var renderButton = (
-			<button type="button" onClick={this.props.onClick} className={className} tabIndex={tabindex}>
+			<button type="button" disabled={this.props.type === 'delete' && this.props.canDelete ? true : false} onClick={this.props.onClick} className={className} tabIndex={tabindex}>
 				<span className={icon} />
 			</button>
 		);
