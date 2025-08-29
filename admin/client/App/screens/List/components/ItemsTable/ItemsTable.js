@@ -21,14 +21,16 @@ const ItemsTable = React.createClass({
 	getInitialState () {
 		return {
 		  canDelete: false,
+		  canEdit: false,
 		  userDetailsLoaded: false
 		};
 	  },
 	componentDidMount () {
 		// Fetch user details when component mounts
-	    getUserDetails().then(({ canDelete }) => {
+	    getUserDetails().then(({ canDelete, canEdit }) => {
 		  this.setState({ 
 			canDelete,
+			canEdit,
 			userDetailsLoaded: true 
 		  });
 		}).catch(error => {
@@ -114,7 +116,7 @@ const ItemsTable = React.createClass({
 	},
 	render() {
 		const { items } = this.props;
-		const { canDelete } = this.state;
+		const { canDelete, canEdit } = this.state;
 		if (!items.results.length) return null;
 
 		const tableBody = (this.props.list.sortable) ? (
@@ -130,6 +132,7 @@ const ItemsTable = React.createClass({
 								id={item.id}
 								item={item}
 								canDelete={canDelete}
+								canEdit={canEdit}
 								{...this.props}
 							/>
 						);

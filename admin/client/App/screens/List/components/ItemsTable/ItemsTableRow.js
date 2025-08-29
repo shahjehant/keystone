@@ -28,6 +28,7 @@ const ItemsRow = React.createClass({
 		connectDragPreview: React.PropTypes.func, // eslint-disable-line react/sort-prop-types
 		// eslint-disable-next-line react/sort-prop-types
 		canDelete: React.PropTypes.bool,
+		canEdit: React.PropTypes.bool,
 	},
 	renderRow (item) {
 		const itemId = item.id;
@@ -41,7 +42,7 @@ const ItemsRow = React.createClass({
 		// item fields
 		var cells = this.props.columns.map((col, i) => {
 			var ColumnType = Columns[col.type] || Columns.__unrecognised__;
-			var linkTo = !i ? `${Keystone.adminPath}/${this.props.list.path}/${itemId}` : undefined;
+			var linkTo = !i ? (this.props.canEdit && `${Keystone.adminPath}/${this.props.list.path}/${itemId}`) || undefined : undefined;
 			return <ColumnType key={col.path} list={this.props.list} col={col} data={item} linkTo={linkTo} />;
 		});
 

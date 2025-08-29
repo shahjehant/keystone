@@ -4,6 +4,7 @@ import classnames from 'classnames';
 var ListControl = React.createClass({
 	propTypes: {
 		canDelete: React.PropTypes.bool,
+		canEdit: React.PropTypes.bool,
 		dragSource: React.PropTypes.func,
 		onClick: React.PropTypes.func,
 		type: React.PropTypes.oneOf(['check', 'delete', 'sortable']).isRequired,
