@@ -48,6 +48,7 @@ import {
 import {
 	deleteItem,
 } from '../Item/actions';
+import { getUserDetails } from '../../../utils/getUserDetails';
 
 const ESC_KEY_CODE = 27;
 
@@ -71,8 +72,24 @@ const ListView = React.createClass({
 			action_url: null,
 			id: null,
 			customUpdateValue: null,
+			canDelete: false,
+			canEdit: false,
+			userDetailsLoaded: false
 		};
 	},
+		componentDidMount () {
+			// Fetch user details when component mounts
+			getUserDetails().then(({ canDelete, canEdit }) => {
+			  this.setState({ 
+				canDelete,
+				canEdit,
+				userDetailsLoaded: true 
+			  });
+			}).catch(error => {
+			  console.error('Error loading user details:', error);
+			  this.setState({ userDetailsLoaded: true });
+			});
+		  },
 	componentWillMount() {
 		// When we directly navigate to a list without coming from another client
 		// side routed page before, we need to initialize the list and parse
@@ -309,6 +326,7 @@ const ListView = React.createClass({
 				currentList={currentList}
 				handleCustomAction={this.customAction}
 				handleCustomActionDownload={this.customActionDownload}
+				canDelete={this.state.canDelete}
 			/>
 		);
 	},

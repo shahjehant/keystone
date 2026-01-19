@@ -21,6 +21,7 @@ function ListManagement({
 	selectAllItemsLoading,
 	currentList,
 	handleCustomAction,
+	canDelete,
 	...props
 }) {
 	// do not render if there's no results
@@ -73,7 +74,7 @@ function ListManagement({
 	}
 
 	// delete button
-	const actionButtons = isOpen && (
+	const actionButtons = isOpen && canDelete && (
 		<Section>
 			<GlyphButton
 				color="cancel"
@@ -158,6 +159,7 @@ ListManagement.propTypes = {
 	nodelete: PropTypes.bool,
 	noedit: PropTypes.bool,
 	selectAllItemsLoading: PropTypes.bool,
+	canDelete: PropTypes.bool,
 };
 
 module.exports = ListManagement;
