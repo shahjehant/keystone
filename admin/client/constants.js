@@ -44,7 +44,7 @@ exports.NETWORK_ERROR_RETRY_DELAY = 500; // in ms
 
 // routes
 export const rolePermissions = {
-	'User Management': ['users', 'sessions', 'companies', 'sub_companies', 'stores', 'sub_company_payment_methods'],
+	'User Management': ['users', 'sessions', 'companies', 'sub_companies', 'stores', 'sub_company_payment_methods', 'buying_ledger_items', 'buying_ledgers','product_mappings'],
 	'Order Management': [
 		'sale_ledgers',
 		'sale_ledger_items',
